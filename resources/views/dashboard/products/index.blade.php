@@ -52,10 +52,10 @@
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
                     <td>
-                        {{ $product->category_id ?? 'Category Not Found' }}
+                        {{ $product->category()->first()->name ?? 'Category Not Found' }}
                     </td>
                     <td>
-                        {{ $product->store_id ?? 'Store Not Found' }}
+                        {{ $product->store->name ?? 'Store Not Found' }}
                     </td>
                     <td>{{ $product->status }}</td>
                     <td>{{ $product->created_at }}</td>

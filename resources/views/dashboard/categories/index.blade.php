@@ -36,6 +36,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Parent</th>
+                <th>Products #</th>
                 <th>Status</th>
                 <th>Created_at</th>
                 <th colspan="2">Actions</th>
@@ -74,17 +75,20 @@
             <!--=========================================================================-->
             {{-- @forelse()  empty  @endforelse --}} {{-- empty Must exist --}}
             {{--        طبعا لابد من وجود "إمتى" فى جمل "الفورإيلس" حيث تقوم بعمل اللوب وعرضه وتنفيذه ان وجد فى الاوبجيكت او الاراى وان لم يوجد تقوم بتنفيذ وعرض ما بعد "إمتى" --}}
+
             @forelse($categories as $category)
                 <tr>
-                    <td><img src="{{ $category->image ? asset('storage/' . $category->image) : asset('storage/uploads/cate.jpg') }}"
+                    <td>
+                        <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('storage/uploads/cate.jpg') }}"
                             alt="" height="50" srcset="">
                     </td>
                     <td>{{ $category->id }}</td>
-                    <td>{{ $category->name }}</td>
+                    <td><a href="{{ route('dashboard.categories.show', $category->id) }}"> {{ $category->name }}</a></td>
                     <td>
                         {{-- {{ $category->parent_id ? $parents[$category->parent_id] : 'Praimary Parent' }} --}}
-                        {{ $category->parent_name ?? 'Praimary Parent' }}
+                        {{ $category->parent->name }}
                     </td>
+                    <td>{{ $category->products_count }}</td>
                     <td>{{ $category->status }}</td>
                     <td>{{ $category->created_at }}</td>
                     <td>
@@ -102,7 +106,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8"> No Categories Defined</td>
+                    <td colspan="9"> No Categories Defined</td>
                 </tr>
             @endforelse
         </tbody>

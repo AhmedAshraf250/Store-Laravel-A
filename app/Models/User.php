@@ -41,4 +41,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function profile()
+    {
+        // ويز ديفالت بترجع انو فى حالة لو طلبت الريلاشن هذه ومكنش فعليا يوجد ريلاشن ليوزر معين بدل ما يرجعلى "نل" هيرجعلى ديفلت
+        // يتم استخدام الويز ديفلت مع علاقات (البيلونجز تو والهاز ون) فقط
+        return $this->hasOne(Profile::class, 'user_id', 'id')->withDefault();
+    }
 }

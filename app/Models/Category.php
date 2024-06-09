@@ -70,6 +70,9 @@ class Category extends Model
             'status' => 'in:active,archived'
         ];
     }
+
+
+
     //الاسكوب فكرتها ان لو محتاج انى اطبق اى شئ معين وله علاقة بجملة الاس-كيو-ال
     // عند تعريف الاسكوب لازم يبدأ او يكون له بداية بريفكس اسمها اسكوب وعند استدعائه يكون بالاسم اللى بعد "إسكوب"ا
     // الاسكوب دائما بيرجع "بيلدر" اوبجيكت حتى لو ما عرفته او عملت له ديفناشن داخل باراميترز الاسكوب, لكن طبعا يفضل ان يتم تعريفه
@@ -97,5 +100,28 @@ class Category extends Model
             $builder->where('categories.status', '=', $status);
         }
         // $categories = Category::filter(request()->query())->Paginate(2); // example in controller
+    }
+
+    // Relationships:
+
+    // 'Category' has one parent & But at the same time, it could have many children
+    // سميتها بارينت عشان للدلالة .. لانى عاوز اعرف مين الاب لهذا الكاتيجورى ولذلك هستخدم ايضا "بيلونجس-تو"ك
+    public function parent()
+    {
+        // إذا هستخدم ريلاشن وهذه الريلاشن ممكن ترجعلى "نل" بعنى لا يوجد نتيجه او علاقة هنا ممكن نستخد واحنا بنعمل ديفاين للريلاشن "ويز-ديفلت" والتى هترجعلى مودل فاضى
+        return $this->belongsTo(Category::class, 'parent_id', 'id')->withDefault([
+            'name' => '-',
+        ]);
+    }
+
+    public function childern()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
+
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
     }
 }

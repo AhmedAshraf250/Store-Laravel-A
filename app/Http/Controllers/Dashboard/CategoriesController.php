@@ -32,15 +32,26 @@ class CategoriesController extends Controller
         // }
 
 
-        // SELECT a.*, parents.name AS parent_name FROM `categories` As `a` LEFT JOIN `categories` AS `parents` ON parents.id = a.parent_id
-        // استخدمت هنا "الليفت-جوين" بدل "الانر-جوين" لان الانر بترجع بيانات فقط فى حالة ان الجدولين بهم ريكورد, وتستثنى نتائج "النل" وهنا فى هذه الحالة يوجد كاتيجوريز البارينت خاصتها قيمته "نل" هنا ومع "الانر" سوف يتم استثنائه
-        // اما "الليفت" سوف تقوم بإرجاع كل الجدل الاول "جدولنا الاساسى" سواء يقابله قيمة فى الجدول الثانى او لا ولا تستثنى النل
-        // اما لو كان جدولنا الاساسى هو الثانى نستخدم ال "الرايت"ك
-        $categories = Category::leftJoin('categories As parents', 'parents.id', '=', 'categories.parent_id')
-            ->select(['categories.*', 'parents.name AS parent_name'])
+
+        $categories = Category::with('parent')
+
+            // SELECT a.*, parents.name AS parent_name FROM `categories` As `a` LEFT JOIN `categories` AS `parents` ON parents.id = a.parent_id
+            // استخدمت هنا "الليفت-جوين" بدل "الانر-جوين" لان الانر بترجع بيانات فقط فى حالة ان الجدولين بهم ريكورد, وتستثنى نتائج "النل" وهنا فى هذه الحالة يوجد كاتيجوريز البارينت خاصتها قيمته "نل" هنا ومع "الانر" سوف يتم استثنائه
+            // اما "الليفت" سوف تقوم بإرجاع كل الجدل الاول "جدولنا الاساسى" سواء يقابله قيمة فى الجدول الثانى او لا ولا تستثنى النل
+            // اما لو كان جدولنا الاساسى هو الثانى نستخدم ال "الرايت"ك
+            /* leftJoin('categories As parents', 'parents.id', '=', 'categories.parent_id')
+            ->select(['categories.*', 'parents.name AS parent_name']) */
+
+            // "select `categories`.*, (select count(*) from `products` where `categories`.`id` = `products`.`category_id` and `status` = ?) as `products_count` from `categories` where `categories`.`deleted_at` is null order by `categories`.`name` asc"
+            ->withCount([
+                'products' => function ($query) {
+                    $query->where('status', '=', 'active')->withoutGlobalScope('store');
+                }
+            ])  // == [->select('categories.*')->selectRaw('(SELECT COUNT(*) FROM products WHERE category_id = categories.id and status = ?) as products_count')]
+
             ->filter(request()->query())
             ->orderBy('categories.name')
-            ->Paginate(2); // return Collection Object
+            ->paginate(); // return Collection Object
         // $categories = Category::simplePaginate(1); // « Previous || Next »
 
         // $parents = Category::all()->pluck('name', 'id')->toArray();
@@ -157,9 +168,12 @@ class CategoriesController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        // هنا استخدمت طريقة ربط المودل يعنى بدل ما اخلى اللارافيل تبعتلى وتستقبل هنا الاى-دى عشان ابدا ابحث الكاتيجورى بالاى-دى
+        // لا همرر لها المودل وهيا هترجعه تلقائى بس بشرط يكون الباراميتر هنا فى الاكشن دى على نفس اسم الباراميتر اللى فى تعريف الراوت اللى بيبعت على الاكشن دى
+        // Route::get('/cate/{$cate}/show', [Category::class,'show]) ---->  public function show(Category $cate){} // Must Same Parameter
+        return view('dashboard.categories.show', ['category' => $category]);
     }
 
     /**
