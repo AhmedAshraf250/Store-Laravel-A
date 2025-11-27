@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'africa/cairo',
 
     /*
     |--------------------------------------------------------------------------
@@ -193,6 +193,9 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Auth' => \Illuminate\Support\Facades\Auth::class
         // 'ExampleClass' => App\Example\ExampleClass::class,
+
+        // added by me
+        'Currency' => App\Helpers\Currency::class,
         // ...
     ])->toArray(),
 

@@ -43,51 +43,64 @@
             </tr>
         </thead>
         <tbody>
-            {{--        ميثود الكاونت هذا يوجد فى اوبجيكت "الكوليكشن" الذى يوجد فى متغير الكاتيجوريز --}}
-            {{--        @if ($categories) --> objects always return true -> even they were null or empty --}}
+            {{-- $categories is collection of Eloquent Models (Collection Object)
 
-            {{--        @if ($categories->count()) --}}
-            {{--            @foreach ($categories as $category) --}}
-            {{--                <tr> --}}
-            {{--                    <td></td> --}}
-            {{--                    <td>{{$category->id}}</td> --}}
-            {{--                    <td>{{$category->name}}</td> --}}
-            {{--                    <td>{{$category->parent_id}}</td> --}}
-            {{--                    <td>{{$category->created_at}}</td> --}}
-            {{--                    <td> --}}
-            {{--                        <a href="{{route('categories.edit')}}" class="btn btn-sm btn-outline-success">Edit</a> --}}
-            {{--                    </td> --}}
-            {{--                    <td> --}}
-            {{--                        <form action="{{route('$categories.destroy')}}" method="post"> --}}
-            {{--                            @csrf --}}
-            {{--                            @method('delete') --}}
-            {{--                            --}}{{--                        <input type="hidden" name="_method" value="delete"> --}}
-            {{--                            <input type="submit" class="btn btn-sm btn-outline-danger" value="Delete"> --}}
-            {{--                        </form> --}}
-            {{--                    </td> --}}
-            {{--                </tr> --}}
-            {{--            @endforeach --}}
-            {{--        @else --}}
-            {{--            <tr> --}}
-            {{--                <td colspan="7"> No Categories Defined</td> --}}
-            {{--            </tr> --}}
-            {{--        @endif --}}
+        count() → Collection method (requires Eloquent Collection)
+        @if ($categories) → always true (even empty Collection returns true)
+        Always pair with count() or isNotEmpty() for accurate empty checks
+        --}}
+            {{-- @if ($categories->count()) --}}
+            {{-- @foreach ($categories as $category) --}}
+            {{-- <tr> --}}
+            {{-- <td></td> --}}
+            {{-- <td>{{$category->id}}</td> --}}
+            {{-- <td>{{$category->name}}</td> --}}
+            {{-- <td>{{$category->parent_id}}</td> --}}
+            {{-- <td>{{$category->created_at}}</td> --}}
+            {{-- <td> --}}
+            {{-- <a href="{{route('categories.edit')}}" class="btn btn-sm btn-outline-success">Edit</a> --}}
+            {{-- </td> --}}
+            {{-- <td> --}}
+            {{-- <form action="{{route('$categories.destroy')}}" method="post"> --}}
+            {{-- @csrf --}}
+            {{-- @method('delete') --}}
+            {{-- --}}{{-- <input type="hidden" name="_method" value="delete"> --}}
+            {{-- <input type="submit" class="btn btn-sm btn-outline-danger" value="Delete"> --}}
+            {{-- </form> --}}
+            {{-- </td> --}}
+            {{-- </tr> --}}
+            {{-- @endforeach --}}
+            {{-- @else --}}
+            {{-- <tr> --}}
+            {{-- <td colspan="7"> No Categories Defined</td> --}}
+            {{-- </tr> --}}
+            {{-- @endif --}}
+
             <!--=========================================================================-->
-            {{-- @forelse()  empty  @endforelse --}} {{-- empty Must exist --}}
-            {{--        طبعا لابد من وجود "إمتى" فى جمل "الفورإيلس" حيث تقوم بعمل اللوب وعرضه وتنفيذه ان وجد فى الاوبجيكت او الاراى وان لم يوجد تقوم بتنفيذ وعرض ما بعد "إمتى" --}}
 
+            {{-- @forelse() empty @endforelse --}} {{-- empty Must exist --}}
+            {{--
+                @forelse → loops if data exists, shows @empty block if not
+                Cleaner and safer than:  @if + @foreach  @else  @endif
+            --}}
             @forelse($categories as $category)
+                {{-- 
+                    File::exists(path)
+                    Storage::disk('public')->exists(path)
+                    file_exists(path)
+                --}}
                 <tr>
                     <td>
-                        <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('storage/uploads/cate.jpg') }}"
-                            alt="" height="50" srcset="">
+                        <img src="{{ $category->image && File::exists(public_path('storage/' . $category->image))
+                            ? asset('storage/' . $category->image)
+                            : asset('storage/uploads/cate.jpg') }}"
+                            alt="{{ $category->name }}" height="50" width="50"
+                            class="w-12 h-12 object-cover rounded-full border-2 border-indigo-500 shadow-lg" loading="lazy"
+                            onerror="this.src='{{ asset('storage/uploads/cate.jpg') }}'; this.onerror=null;">
                     </td>
                     <td>{{ $category->id }}</td>
                     <td><a href="{{ route('dashboard.categories.show', $category->id) }}"> {{ $category->name }}</a></td>
-                    <td>
-                        {{-- {{ $category->parent_id ? $parents[$category->parent_id] : 'Praimary Parent' }} --}}
-                        {{ $category->parent->name }}
-                    </td>
+                    <td>{{ $category->parent->name }}</td>
                     <td>{{ $category->products_count }}</td>
                     <td>{{ $category->status }}</td>
                     <td>{{ $category->created_at }}</td>
@@ -98,33 +111,50 @@
                     <td>
                         <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
                             @csrf
+                            {{-- <input type="hidden" name="_method" value="delete"> --}}
                             @method('delete')
-                            {{--                        <input type="hidden" name="_method" value="delete"> --}}
                             <input type="submit" class="btn btn-sm btn-outline-danger" value="Delete">
                         </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9"> No Categories Defined</td>
+                    <td colspan="9">No categories available yet.</td>
                 </tr>
             @endforelse
         </tbody>
 
     </table>
+    {{-- 
+        - links() → generates pagination links for paginated data
+        Requires data to be paginated using paginate() or simplePaginate() on query at controller or model level LIKE: $categories = Category::paginate(10);
+        then in Blade view: {{ $categories->links() }} 
 
-    {{-- must pass to this current file "paginate()" method, To "links()" works --}}
-    {{-- ميثود "لنكس" بترجع كود الاتش-تى-ام-ال الخاص "بالباجناشن" لهذا الفيو او الصفحة --}}
+        [SUMMARY]:
+        must use paginate() or simplePaginate() in controller/model to get paginated data
+        then call links() in Blade view to render pagination links
+    --}}
+
     {{-- Default pagination Style --}}
     {{ $categories->withQueryString()->links() }} {{-- === --}} {{-- $categories->appends(request()->all())->links() --}}
     {{ $categories->withQueryString()->links('pagination.custom') }} {{-- Custom Pagination (only here in this page or view file) --}}
-    {{-- لو احتجت انى اعمل كاستوم باجينياشن غير الديفلك اللى موجود فى اللارافيل, بصممه فى ملف خاص به مثلا وبضمنه داخل ميثود اللينكس --}}
+    {{-- 
+        - If I ever need to create a custom pagination layout instead of Laravel’s default one,
+            I can design it in a separate file and include it inside the "links" method.
+        -The "withQueryString" method appends all current query string parameters
+            to every pagination link generated by the "links" method.
+        - This ensures that any filters, search terms, or other query parameters present in the URL
+            are retained when navigating between paginated pages.
+    --}}
 
-    {{-- ميثود "ويز-كويرى-استرينج" يلحق كل باراميترات الكويرى استرينج الحالى الى كل روابط نظام الصفح الذى تم انشائه بواسطة ميثود اللينكس --}}
-    {{-- وكل هذا لكى يتم ضمان الاحتفاظ بكل باراميترات البحث والفلتره او اى كويرى استرينج باراميتر اثناء التنقل بين الصفحات والروابط --}}
-    {{-- The withQueryString method appends the current query string parameters to each pagination link. This ensures that any filters, search terms, or other query parameters present in the URL are retained when navigating between paginated pages. --}}
+    {{-- 
+        - To publish the pagination views to your application so you can customize them, run the following Artisan command:
+            "> php artisan vendor:publish --tag=laravel-pagination"
+        - The "vendor:publish" command copies certain files (like views or config files) from the
+            vendor directory into the application so we can safely modify or customize them.
+        - After running the command above, Laravel publishes all pagination view files from the
+            core vendor folder into resources/views, allowing full customization when needed. 
+    --}}
 
-    {{-- "> php artisan vendor:publish --tag=laravel-pagination" --}}
-    {{-- بعد تنفيذ الكوماند اللى فوق دا اللارافيل نشرت كل اصول نظام الباجيناشن سيستم من فلدر الفندور اللى يعتبر نواة لارافيل الى فلدر الريسورسس وتحديدا فى فلدر الفيو, طبعا للتعديل والاضافة عليهم عند الحاجه --}}
     {{-- LOOK: 'resources\views\vendor\pagination\bootstrap-4.blade.php' For more Info about pagination work --}}
 @endsection

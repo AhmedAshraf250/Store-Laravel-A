@@ -1,47 +1,33 @@
-{{-- @props(['attribute' => 'defualt value']) --}}
+{{-- 
+    @props([
+    'attribute1' => 'defualt value'
+    'attribute2' => 'defualt value'
+    ..
+    ])
+    البروبس وظيفتها هنا إننى بفهم اللارافيل إن الكومبوننت (component) ده ايه هيا المتغيرات او الاتريبيوتس اللى يتوقعها ويستقبلها
+--}}
 @props([
     'label' => false,
     'type' => 'text',
     'name',
     'value' => '',
 ])
-{{-- البروبس وظيفتها هنا إننى بفهم اللارافيل إن الكومبوننت ده ايه هيا المتغيرات او الاتريبيوتس اللى يتوقعها ويستقبلها  --}}
 
 @if ($label)
     <label for="">{{ $label }}</label>
 @endif
 
-<input type={{ $type }} name={{ $name }}
-    value="{{ old($name, $value) }}" {{-- @class(['form-control', 'is-invalid' => $errors->has($name)]) --}}
+<input type={{ $type }} name={{ $name }} value="{{ old($name, $value) }}" {{-- @class(['form-control', 'is-invalid' => $errors->has($name)]) --}}
     {{ $attributes->class(['is-invalid' => $errors->has($name)]) }}>
+{{-- $attributes → Attribute Bag (Component "Rest" Props)
+        • Special variable unique to Blade components
+        • Contains all attributes passed to the component that are not explicitly defined in @props
+        • Can be merged with additional attributes using ->class(), ->merge(), etc. --}}
 
-{{--  الاتريبيوتس فاريابل خاص داخل الكومبوننت ووظيفته ان اى متغير او اتريبيوت بعته للكومبوننت ومش معرفه داخل هذا الكومبوننت انه يتوقعه, يقوم متغير الاتريبيوتس هذا بطباعة باقى الاتريبيوتس كما هو  --}}
-{{-- بإختصار الاتريبيوتس فاريابل هيطبع كامل الاتريبيوتس اللى انا مررتها للكومبوننت اللى مش معرفه فى البروبس  --}}
-{{--  --}}
-
-{{-- @if ($errors->has('name')) --}}
-<!-- معناها هل يوجد اخطاء لحقل النايم او به اخطاء؟, لو به هتعطى ترو  -->
+{{-- @if ($errors->has('name')) //todo  @endif   ===   @error('name') //todo @enderror --}}
 @error($name)
     <div class="invalid-feedback">{{ $message }}</div>
-    {{-- متغير "الماسيج" يكون معترف به فقط داخل دياريكتف "الإيرور", وبتكون وظيفته عرض اول رسالة خطا تكون داخل اسم هذا الحقل --}}
+    {{-- $message (within @error)
+            • Scoped exclusively to the @error('field') ... @enderror block
+            • Holds the first validation error string for that field --}}
 @enderror
-
-
-
-
-
-
-
-
-{{-- الطريقة القديمة قبل استخدام الكومبوناند --}}
-
-{{-- <input @class(['form-control', 'is-invalid' => $errors->has('name')]) type="text" name="name" id=""
-    value="{{ old('name', $category->name ?? '') }}"> --}}
-
-{{-- @if ($errors->has('name')) --}}
-<!-- معناها هل يوجد اخطاء لحقل النايم او به اخطاء؟, لو به هتعطى ترو  -->
-
-{{-- @error('name') --}}
-{{-- <div class="invalid-feedback">{{ $message }}</div> --}}
-{{-- متغير "الماسيج" يكون معترف به فقط داخل دياريكتف "الإيرور", وبتكون وظيفته عرض اول رسالة خطا تكون داخل اسم هذا الحقل --}}
-{{-- @enderror --}}

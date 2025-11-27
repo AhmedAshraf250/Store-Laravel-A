@@ -43,11 +43,12 @@
 
             @forelse($products as $product)
                 <tr>
-                    {{-- <td><img src="{{ $product->image ? asset('storage/' . $product->image) : asset('storage/uploads/cate.jpg') }}"
-                            alt="" height="50" srcset="">
-                    </td> --}}
-                    <td><img src="{{ $product->image ? $product->image : asset('storage/uploads/cate.jpg') }}"
-                            alt="" height="50" srcset="">
+                    <td>
+                        <img src="{{ $product->image && file_exists(public_path('storage/' . $product->image))
+                            ? asset('storage/' . $product->image)
+                            : asset('storage/uploads/product.png') }}"
+                            alt="{{ $product->name }}" height="50" loading="lazy"
+                            onerror="this.src='{{ asset('storage/uploads/product.png') }}'; this.onerror=null;">
                     </td>
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>

@@ -34,7 +34,10 @@ return [
         'active' => 'dashboard.orders.*'
     ]
 ];
-// الفكره هنا لو اردت ان اضيف عنصر جديد للناف-بار ما علي سوى ان اضيفه هنا واعرف له خصائصه زى اسمه والايقون للدلاله عليه بجانب الرابط الخاص به
-// وده بدلا من انى اروح على ملف الفيو واقعد اعرف واصمم الجزء الجديد هذا, ما على سوى انى اعرف الكونفيجراشن الخاص بالعنصر الجديد (ايقون-راوت-تايتل) اللى بنريد نضيفه
-// وبعد كدا هنخلى مسئولية الكومبوننت المرتبط بهنا هو اللى يعرض الناف مثلاً
-// look => 'app\View\Components\Nav.php' & 'resources\views\components\nav.blade.php'
+
+/**
+ * the idea here is that if I want to add a new item to the nav-bar all I have to do is to add it here and define its properties like (icons-route-title-etc)
+ * instead of going to the view file and defining and designing this new part,
+ * then the responsibility of the component associated here is to display the nav for example.
+ * look => 'app\View\Components\Nav.php' & 'resources\views\components\nav.blade.php'
+ */

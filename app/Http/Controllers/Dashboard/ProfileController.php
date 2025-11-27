@@ -19,27 +19,40 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // عشان نوصل للاوبجيكت بتاع الاوثنتكاتيت يوزر يوجد كذا طريقه إما من الاوث-فاساد زى فى الايديت-ميثود فوق, او من الريكويست اوبجيكت.... اليوزر اللى عامل الريكويست
-
+        /**
+         * To get the authenticated user we can use:
+         *   1. $request->user() // from the request
+         *   2. Auth::user()     // Auth Facade 
+         */
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'birthday' => ['nullable', 'date', 'before:today'],
             'gender' => ['in:male,female'],
+
+            'street_address' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'state' => ['nullable', 'string', 'max:255'],
+            'postal_code' => ['nullable', 'string', 'max:20'],
+
             'country' => ['required', 'string', 'size:2'],
+            'locale' => ['nullable', 'string', 'size:2'],
         ]);
 
         $user = $request->user();
         $user->profile->fill($request->all())->save();
 
         // $profile = $user->profile;   // profile is (one to one relation) // return profile model object
-        // if ($profile->first_name) {  // object always returns TURE, so added 'user_id' to make check
+        // if ($profile->first_name) {  // $profile only always returns true because of the withDefault() method, so added 'user_id' to make check
         //     $profile->update($request->all());
         // } else {
         //     // $request->merge(['user_id' => $user->id]);
         //     // Profile::create($request->all());
-        //                                                //same result with relation
-        //     $user->profile()->create($request->all()); // الريكويست لا يحتوى على يوزر اى دى طب ازاى هنعبى البروفايل ولازم طبعا يكون موجود اسم"يوزر اى دى" فى الحالة دى نحصل عليه من الريلاشن تلقائيا
+
+        //     //    [OR]  with Relation can do it with same result
+        //     // request does not contain 'user_id', so added it manually from relation to create new profile
+        //     // Relation can used to create a new record by passing the attributes to the create method
+        //     $user->profile()->create($request->all());
         // }
 
         return redirect()->route('dashboard.profile.edit')->with('success', 'Profile Updated!');

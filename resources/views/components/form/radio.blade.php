@@ -18,8 +18,13 @@
 @endforeach
 
 
-{{-- Old One Befor Components --}}
 
+
+
+
+
+
+{{-- previous coding --}}
 {{--
     <div class="form-check">
     <input
@@ -29,7 +34,5 @@
     <label class="form-check-label" for="statusRadio2">Archived</label>
 </div>
 --}}
-
-
 
 {{-- @if (isset($category)) @checked(old('status', $category->status ?? '') === 'active') @else checked @endif> --}}

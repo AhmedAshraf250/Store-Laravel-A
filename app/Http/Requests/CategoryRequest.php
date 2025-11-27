@@ -24,27 +24,34 @@ class CategoryRequest extends FormRequest
      */
     public function rules()
     {
-        // return [
-        //     'name' => ['required', 'string', 'min:3', 'max:255', Rule::unique('categories', 'name')->ignore($id)],
-        //     'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
-        //     'image' => ['image', 'max:1047576', 'dimensions:min_width=100,min_height=100', 'mimetypes:image/jpeg,image/png,image/jpg,image/gif,image/svg+xml'],
-        //     'status' => 'in:active,archived'
-        // ];
+        /** 
+         *    return [
+         *        'name' => ['required', 'string', 'min:3', 'max:255', Rule::unique('categories', 'name')->ignore($id)],
+         *        'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+         *       'image' => ['image', 'max:1047576', 'dimensions:min_width=100,min_height=100', 'mimetypes:image/jpeg,image/png,image/jpg,image/gif,image/svg+xml'],
+         *        'status' => 'in:active,archived'
+         *    ];
+         * 
+            OR
 
-        // OR
-
-        // > php artisan route:list
-        // -----GET|HEAD        dashboard/categories/{category}/edit
-        // $this->route('categories'); => return 11 //
-        // ---------- http://localhost:8000/dashboard/categories/11/edit
-
-        // look "> php artisan route:list"    // i get the "parameter name" form url [dashboard/categories/{category}]
+         *   > php artisan route:list
+         *      GET|HEAD        dashboard/categories/{category}/edit  ||| for example http://localhost:8000/dashboard/categories/11/edit
+         *   $this->route('categories');  // return 11
+         * 
+                this class is extending FormRequest which extends the base Request class
+                and the base Request class has a method called route() which allows us to access route parameters.
+         */
         $id = $this->route('category');
+        // look   > php artisan route:list   // i get the "parameter name" form url [dashboard/categories/{category}]
 
-        // فى مودل الكاتيجورى عرفنا بداخله هذه الميثود "رولز" وبتحتاج بداخلها اجريومينت, طب كيف امرر هذا الاجريومنت لها ؟ .. بالاعلى
+        // in Category Model we defined a method called rules() which needs an argument, so we call it here and pass the $id to it
         return Category::rules($id);
     }
 
+    /**
+     * if we want to customize the error messages for validation rules, we can do so by overriding the messages() method in the FormRequest class.
+     * @return array<string, string>
+     */
     public function messages()
     {
         return [

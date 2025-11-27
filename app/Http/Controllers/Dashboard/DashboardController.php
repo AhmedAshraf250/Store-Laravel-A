@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 
 class DashboardController extends Controller
 {
@@ -18,6 +19,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Return response: view, json, redirect, files
+
         return view('dashboard.index');
 
         // return View::make('dashboard');

@@ -18,10 +18,11 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        // فى حالة انى لو اردت ايقاف الجلوبال اسكوب الذى تم إنشائه لهذا المودل فى بعض الحالات
+        // in Case if I want to stop global scope of this model => withoutGlobalScope('scopeName') LIKE: 
         // $products = Product::withoutGlobalScope('store')->paginate();
+
         $products = Product::with(['category', 'store'])->paginate(); // Eager loading => 3 sql queries to preload data, for avoid sql queries in loops
-        // الويز ميثود دى باستخدمها عشان اطلب من اللارافيل انها تعمل تحميل مسبق للريلاشنز التابعه لهذا المودل الذى استعلم عنه وذلك لتقليل جمل الاستعلام فى الفيو مثلاً
+        // with() method used to eager load relationships.
 
         return view('dashboard.products.index', compact('products'));
     }
@@ -53,10 +54,7 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-
-    }
+    public function show($id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -80,30 +78,57 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        //  TODO: Validate
+
         $product->update($request->except('tags'));
 
-        // dd($request->post('tags'));
-        $tags = json_decode($request->post('tags'));
-        $tag_ids = [];
+        //  -- -- -- -- -- Legacy Code -- -- -- -- --
+        // $tags = json_decode($request->post('tags'));
+        // $tag_ids = [];
 
-        $saved_tags = Tag::all(); // return collection object // وهى عبارة عن تو ممكن نقول انها اراى فيها مجموعة من البيانات
+        // $saved_tags = Tag::all(); // return collection object
 
-        foreach ($tags as $item) {
-            $slug = Str::slug($item->value);
-            //الجملة اللى تحت دى مش جملة استعلام من الداتابيس, بل بحث داخل الكوليكشن اوبجيكت اللى رجعناه فوق , وهكذا لن يتم فى كل لفه عمل كويرى واستعلام داخل الداتا بيس وهذا هو الصحيح والمنطقى
-            $tag = $saved_tags->where('slug', $slug)->first();
-            if (!$tag) {
+        // foreach ($tags as $item) {
+        //     $slug = Str::slug($item->value);
+        //     // where() here not query statement from database, but search in collection object, which we get from above, and this is the right way
+        //     $tag = $saved_tags->where('slug', $slug)->first();
+        //     if (!$tag) {
+        //         $tag = Tag::create([
+        //             'name' => $item->value,
+        //             'slug' => $slug,
+        //         ]);
+        //     }
+        //     $tag_ids[] = $tag->id;
+        // }
+        // $product->tags()->sync($tag_ids);
+
+
+        $tagNames = json_decode($request->post('tags')); // return array
+        $tagNames = array_filter(array_map(fn($item) => $item->value, $tagNames));
+        $slugs = array_map([Str::class, 'slug'], $tagNames); // make array of slugs of tags from request
+        $existingTags = Tag::whereIn('slug', $slugs)->pluck('id', 'slug')->toArray(); // saved tags from database // return like [slug => id]
+        $tagIdsToSync = [];
+        foreach ($tagNames as $name) {
+            $slug = Str::slug($name);
+            if (isset($existingTags[$slug])) {
+                $tagIdsToSync[] = $existingTags[$slug];
+            } else {
                 $tag = Tag::create([
-                    'name' => $item->value,
+                    'name' => $name,
                     'slug' => $slug,
                 ]);
+                $tagIdsToSync[] = $tag->id;
             }
-            $tag_ids[] = $tag->id;
         }
+
         // ميثود "سينك" خاصة فقط بعلاقات مانى تو مانى,هتروح تفحص الجدول الوسيط على مستوى هذا البرودكت, هل الآيديز المبعوته فى الاراى موجوده فى الجدول الوسيط, بمعنى هل برودكت 1 وتاج 1 موجودين.. إذا موجودين خلاص مش هتعمل حاجه .. إذا مش موجودين هتضيفهم
         // طب اذا عندى مثلا فى الجدول الوسيط برودكت 1 مع تاج 2 بس انا فى الاراى اللى بعتها مفيش فيها تاج 2 هنا السينك هتحذفه من الجدول
         // السينك اللى انا ببعته بتخزنه , يعنى اللى مش موجود فى الاراى اللى بعتهالها وفى نفس الوقت موجود قديما مثلا فى الجدول فستقوم بحذفه وتحديث الجدول على حسب الاراى المعطاه لها وبطبيعه الحال اللى مش موجود فى الجدول وموجود فى الاراى هتضيفه
-        $product->tags()->sync($tag_ids);
+        $product->tags()->sync($tagIdsToSync);
+        // [SUMMARY]:
+        // sync() keeps the pivot table exactly matching the IDs you provide.
+        // Anything in the pivot table that is NOT in the given array will be removed.
+        // Anything in the array that is NOT already in the pivot table will be added.
 
         return redirect()->route('dashboard.products.index')->with('success', 'Product updated');
     }

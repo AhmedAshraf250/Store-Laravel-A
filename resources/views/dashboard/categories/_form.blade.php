@@ -9,9 +9,11 @@
     </div>
 @endif
 
-{{-- old() --}}
-{{-- الاولد فانكشن وظيفتها بترجع القيمة التى كانت فى حقل ما فى الريكوست السابق, وعشان نحدد القيم اكيد بنعطى هذه الفانكشن اسم الانبت بداخلها --}}
-{{-- اما الاجريومنت التانى الذى بداخلها فهترجع قيمته لو ما وجدت قيمة لاسم الحقل الذى يوجد فى الاجريومنت الاول, الذى نحصل عليه بالطبع من الريكوست السابق --}}
+
+{{-- old()
+old('name')            → Retrieves previously submitted input from previous request
+old('name', 'default') → fallback if no old data exists
+Useful when validation fails and you want to repopulate the form with previous input --}}
 
 {{-- Category Name Field --}}
 <div class="form-group">
@@ -44,7 +46,7 @@
 </div>
 
 
-{{-- Image Upload 'FILE' Field --}}
+{{-- Image Upload 'FILE' Field --}} {{-- $slot --}}
 <div class="form-group">
     <x-form.label id="image">Upload image</x-form.label>
     <x-form.input {{-- label="Upload image" --}} class="form-control-file" type="file" name="image" accept="image/*" />

@@ -8,22 +8,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{--    <title>{{env('APP_NAME')}}</title> --}}
-    {{--   لا ينصح انى استخدم الهيلبر فانكشن إنف التى تقرا من ملف الإنف فى الكود فى التطبيق ويفضل استخدامها فقط داخل فلدر الاكونفج --}}
-    {{-- وذلك لان فى اخر مرحلة وهى البرودكشن بعد التطوير وعند عمل امر الكونفج كاش التطبيق بيلم جميع فيلات الكونفج وبيحطها فى ملف واحد وبيقرا منه وايضا ما عاد بيقرا من ملف الإنف --}}
-    {{--    <title>{{config('app')['name']}}</title> --}}
-    <title>{{ config('app.name') }}</title>
+
+    {{--    
+        <title>{{env('APP_NAME')}}</title>
+        Never use env() outside config files.
+        
+        In production, `php artisan config:cache` replaces all env() calls with
+        cached values. Direct env() usage in Blade/views will return null.
+        
+        Always use: config('app.name') or define a constant/accessor.
+    --}}
+
+    <title>{{ config('app.name') }} - @yield('title', 'Home')</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link
+        rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fontawesome/css/all.min.css') }}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
 
     @stack('styles')
-
 
 </head>
 
@@ -81,7 +87,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="{{ asset('dist/img/user1-128x128.jpg') }}" alt="User Avatar"
+                                <img src="{{ asset('img/user1-128x128.jpg') }}" alt="User Avatar"
                                     class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -101,7 +107,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="{{ asset('dist/img/user8-128x128.jpg') }}" alt="User Avatar"
+                                <img src="{{ asset('img/user8-128x128.jpg') }}" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -121,7 +127,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="{{ asset('dist/img/user3-128x128.jpg') }}" alt="User Avatar"
+                                <img src="{{ asset('img/user3-128x128.jpg') }}" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -191,8 +197,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Main Sidebar Container -->
 
         {{-- @include('layouts.dashboard.partials.sidebar',['active'=>'dashboard']) --}}
-        <x-nav />
 
+        <x-nav />
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -209,8 +215,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <li class="breadcrumb-item">
                                         <a href="{{ route('dashboard.dashboard') }}">Home</a>
                                     </li>
+                                    {{--   @show
+                                    Renders the content of the current @section.
+                                    When used in the main layout, it displays the section's content
+                                    as a fallback for any child view that does not define its own version.
+                                    This pattern ensures consistent rendering across all pages.
+                                    --}}
                                 @show
-                                {{--                            استخدمنا الشو مع السيكشن هنا فى اللاى اوت الاساسى ليتم عرضه افتراضيا فى جميع الحالات --}}
 
                             </ol>
                         </div><!-- /.col -->
@@ -259,11 +270,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- REQUIRED SCRIPTS -->
 
     <!-- jQuery -->
-    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
-    <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
+    <script src="{{ asset('js/adminlte.min.js') }}"></script>
 
 
     @stack('scripts')

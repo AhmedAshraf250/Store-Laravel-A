@@ -27,17 +27,14 @@ class Filter implements Rule
      */
     public function passes($attribute, $value)
     {
-        /*
-        <input name="name" value=">
-            - الاتريبيوت : بيمثل إسم الحقل, اى سيكون اسمه دائما "نايم"ك
-            - الفاليو : هى القمية التى تم إدخالها فى هذا الحقل, اى القيمة التى كانت فى الريكوست
-        */
-
-
-
-        // هنا بنحط اللوجيك بتاع الفحص
-
-
+        // here inside the passes method we put the logic of the validation
+        // if the value is in the forbidden list, return false (validation fails)
+        // otherwise, return true (validation passes)
+        /**
+         * <input name="name" value="">
+         * - $attribute: Represents the name of the field, which will always be "name" in this case.
+         * - $value: The value entered in this field, value present in the request.
+         */
 
 
         // if (strtolower($value) == 'laravel') {
@@ -46,16 +43,13 @@ class Filter implements Rule
         // return true;
 
         // for Clean Code we can write like this:
-        // return !(strtolower($value) === 'php');
+        // return !(strtolower($value) === 'laravel');
 
 
 
 
         // is_string($this->forbidden) ? $this->forbidden = [$this->forbidden] : null;
         return !in_array(strtolower($value), $this->forbidden);
-
-
-
     }
 
     /**

@@ -17,7 +17,7 @@
 
     <form action="{{ route('dashboard.profile.update') }}" method="post" enctype="multipart/form-data">
         @csrf
-        @method('patch') <!-- method 'put' for 'update' -->
+        @method('patch') {{-- 'patch' if no parameter exist in the Route , 'put' if parameter is exist --}}
 
         <div class="form-row">
             <div class="col-md-6">

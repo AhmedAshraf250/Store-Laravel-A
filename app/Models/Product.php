@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 
 class Product extends Model
@@ -25,13 +26,12 @@ class Product extends Model
         'status',
     ];
 
-
-
-
-    // GLOBAL SCOPE
-    // هذه الميثود لارافيل بتستخدمها لكى تعمل تهيئه او إنشيليزاشن للمودل هذا يعنى بووت مع انطلاقه وتشغيله
-    // زى ما فى على مستوى الابليكاشن "الآب سيرفيسس بروفيدرز" عشان نعمل بوت إستراب للأبليكشان, كمان لو بعمل بوت إستراب للمودل نفسه زى لو فيه عمليات هضيفها على المودل بشكل اساسى وتلقائى
-    // لذلك يوجد به استاتيك ميثود بنعرفها وبنضيف بها الاكواد اللى عاوزينها تتنفذ مع كل مره يتم إستخدام هذا المودل
+    /**
+     * the booted() method is used to define global scopes or automatic behaviors
+     * that should run every time the model is used. This means that on any query
+     * or create/update/delete operation, Laravel will trigger the logic placed here.
+     * 
+     */
     public static function booted()
     {
         // static::addGlobalScope('store', function (Builder $builder) {
@@ -40,33 +40,40 @@ class Product extends Model
         //         $builder->where('store_id', '=', $user->store_id);
         //     }
         // });
-        // // بمرر له كلاس وابجيكت منه او كلوشر فانكشن عادى
 
+        // pass a closure or class that implements Scope interface
 
-        // > php artisan make:scope ProductScope
+        // > php artisan make:scope ProductScope // app\Models\Scopes\ProductScope.php
         static::addGlobalScope('store', new ProductScope());
-
     }
 
 
 
-
+    // [Relations]:
 
     // foreach($products as $product) {
-    //     $product->category->name // OR // $product->category()->first()->name
-    //     $product->store->name // OR // $product->store()->first()->name
-    //
-    //                   $product->category() => (return object form the relationship 'belongsTo')
-    //                   $product->category => (return object form the model)
-    //                        so how that Work !!
-    //  فى لارافيل ممكن ننادى على العلاقة اللى تم بنائها باسمها عادى ولكن, كابروبيرتى وليس ميثود
-    // لو نادينا عليها كميثود بترجع اوبجيكت بالعلاقة وليس الناتج من هذه الميثود كالمودل مثلاً
-    // ولذلك عند مناداة اسم الميثود دى كابروبيرتى ومفيش اصلا اسم بروبيرتى بالاسم دا, هنا اللارافيل تتدخل والماجيك ميثود اللى فى الكلاس تعمل
-    // الماجيك ميثود تبدأ تتلقى اسم البروبيرتى دى اللى مش موجوده وتبدا تشوف طب هل فى اسم ميثود على نفس الاسم؟ لو موجود طيب تبدا مثلا تشوف هل هذه الميثود بترجع ريلاشن ؟ تبدا تنفذ هذا الريلاشن وترجع الناتج تبعها وفى النهاية بترجع المودل
+    //     $product->category->name     // OR //    $product->category()->first()->name
+    //     $product->store->name        // OR //    $product->store()->first()->name
     // }
+    /**
+     * $product->category() => return object form the relationship 'belongsTo'
+     * $product->category => return object form the model
+     *   *   *   so how that Work !!
+     *   In Laravel, you can call a defined relationship using its name as a property, not as a method.
+     *   If we call it as a method, it returns the relationship object itself, not the result from this method
+     *   Therefore, when calling this method's name as a property and there is no actual property with that name,
+     *      1.Laravel steps in and uses the "magic method" in the class.
+     *      2. The magic method receives this property name that doesn't exist and checks if there is a method with the same name.
+     *      3. If such a method exists, Laravel checks whether this method returns a relationship.
+     *      4. Then it executes this relationship and returns its result, which is ultimately the related model.
+     */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class, 'category_id', 'id')->withDefault(
+            [
+                'name' => '-',
+            ]
+        );
     }
     public function store()
     {
@@ -84,5 +91,32 @@ class Product extends Model
             'id'            // PK Related Model
         );
         // In Laravel IF Making Names with Default Just short this Code In => [return $this->belongsToMany(Tag::class);] ||| Laravel will do the rest auto
+    }
+
+    public function scopeActive(Builder $builder)
+    {
+        $builder->where('status', '=', 'active');
+    }
+
+    // [Accessors]:
+    //      Difinition -> 'CamelCase' || invoke -> 'snake_case'  {{ $Model->image_url }}
+    public function getImageUrlAttribute()
+    {
+        // return default image
+        if (!$this->image) {
+            return 'https://www.incathlab.com/images/products/default_product.png';
+        }
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+        return asset('storage/' . $this->image);
+    }
+
+    public function getSalePercentAttribute()
+    {
+        if (!$this->compare_price) {
+            return 0;
+        }
+        return round(100 - (100 * $this->price / $this->compare_price), 1);
     }
 }

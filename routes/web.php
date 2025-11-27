@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/products', [ProductsController::class, 'index'])
+    ->name('products.index');
+Route::get('/products/{product:slug}', [ProductsController::class, 'show'])
+    ->name('products.show'); // {product:slug} 'slug' will be the default for [model binding] in this route instead of 'id'
+
+Route::post('/paypal/webhook', function () {
+    echo 'webhook Called'; // Test  
 });
 
 Route::middleware('auth')->group(function () {

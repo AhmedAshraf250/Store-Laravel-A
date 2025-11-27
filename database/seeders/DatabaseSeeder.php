@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         // > php artisan db:seed
 
 

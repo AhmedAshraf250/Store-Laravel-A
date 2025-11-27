@@ -20,7 +20,6 @@
                 <th>Store</th>
                 <th>Status</th>
                 <th>Created_at</th>
-
             </tr>
         </thead>
         <tbody>
@@ -37,13 +36,14 @@
             @forelse($products as $product)
                 <tr>
                     <td>
-                        <img src="{{ $product->image ? $product->image : asset('storage/uploads/cate.jpg') }}" alt=""
-                            height="50" srcset="">
+
+                        <img src="{{ $product->image && Storage::disk('public')->exists($product->image)
+                            ? Storage::disk('public')->url($product->image)
+                            : asset('storage/uploads/product.png') }}"
+                            alt="{{ $product->name }}" height="50" loading="lazy">
                     </td>
                     <td>{{ $product->name }}</td>
-                    <td>
-                        {{ $product->store->name ?? 'Store Not Found' }}
-                    </td>
+                    <td>{{ $product->store->name ?? 'Store Not Found' }}</td>
                     <td>{{ $product->status }}</td>
                     <td>{{ $product->created_at }}</td>
                 </tr>

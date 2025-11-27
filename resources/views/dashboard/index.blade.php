@@ -1,7 +1,7 @@
 @extends('layouts.dashboard.app')
 
 
-@section('title', 'Starter Page')
+@section('title', 'Dashboard')
 
 @section('breadcrumb')
     @parent
@@ -73,11 +73,13 @@
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('dist/css/stylestest.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('dist/css/stylestest.css') }}"> --}}
 @endpush
+
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('dist/css/stylestest2.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('dist/css/stylestest2.css') }}"> --}}
 @endpush
+
 @push('scripts')
-    <script src="{{ asset('dist/js/js_test.js') }}"></script>
+    {{-- <script src="{{ asset('dist/js/js_test.js') }}"></script> --}}
 @endpush

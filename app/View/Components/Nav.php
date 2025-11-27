@@ -7,10 +7,26 @@ use Illuminate\View\Component;
 
 class Nav extends Component
 {
-    // Class-based components allow you to define both the template and the behavior of the component in a class.
 
-    // البروبيرتى أيتيمس بدل اسكوبها بابليك هنا يبقى هتكون بطبيعة الحال متضمنه تلقائيا فى ملف الفيو اللى فى ميثود الريندر
-    // اما لو بروتيكتيد فأكيد لازم نمررها ونضمنها يديويا داخل ملف الفيو هذا
+    /**
+     * the Second type of components is [class-based components].
+     * component have a class and a view.
+     * Class-based components allow you to define both: [the template] and [the behavior of the component] in a class.
+     * 
+     * why to use class-based components?
+     * 1- when the component need to do specific tasks like fetching data from database or calling an API.
+     * 2- to add logic to the component.
+     * 3- reuse the component in multiple places.
+     * 4- create a more complex component.
+     * 5- when I need to create a component that is not just a simple HTML element.
+     */
+
+
+    /**
+     * Create properties for the data you want to pass to the component's view.
+     * if the properites was declared as public, it will be automatically available to the component's view.
+     * if you want to make them available manually, you can define them as protected properties. and then pass them to the view from the render method.
+     */
     public $items;
     public $active;
 
@@ -22,18 +38,32 @@ class Nav extends Component
      * @return void
      */
 
-    // <x-nav context="side" />
-    // عند تمرير باراميترز او اتريبيوتس لكومبوننت له كلاس, يتم استقبالهم فى "كونستراكت" اللى فى هذا الكلاس بنفس الإسم ونفس الترتيبب
-    // public function __construct($context = 'side'){//logic}
 
     public function __construct()
     {
-        // هننشئ ملف "الناف" وطبعا ملفات الكونفج بترجع دائما اراى, يعنى هحتفظ بالاراى  هنا داخل الايتمس بروبيرتى
-        $this->items = config('nav');
-        $this->active = Route::currentRouteName();
-        // بترجع اليو-ار-ال الحالى بالظبط كما هو, يعنى لو فى داخل مجال الكاتيجوريز ودخلت على فرع انشاء كاتيجورى جديد مثلا اليو-ار-ال بتاع الانشاء طبعا بيكون له يو-ار-ال خاص له ومعرف له, وهنا المشكلة ,
-        // وبالتالى استخدام هذه الفكره لطباعة كلمة "اكتيف" لتحديد اى التابات هى اللى نشطة , لن يكون دقيقاً, وبالتالى عرفنا كى الـ "اكتيف" داخل ملف "ناف" فى فلدر "كونفج"ك
+        /**
+         * when passing attributes or parameters to a class-based component, LIKE: <x-nav context="side" />
+         * they are received in the constructor of the class with the same name and same order.
+         * you can also define default values for the parameters in the constructor. LIKE: public function __construct($context = 'default'){ //logic }
+         */
+        // config files always return an array
+        // so I create the nav file inside the config folder to hold the nav items data
 
+        $this->items = config('nav');
+        // $this->active = Route::currentRouteName(); // 
+        /**
+         *  Route::currentRouteName()
+         *      - returns the [name] of the current route as is like 'dashboard.categories.index'
+         * 
+         * so if I was in categories then go to create category page the current route name will be 'dashboard.categories.create'
+         * so the active will fails between 'dashboard.categories.index' and 'dashboard.categories.create'
+         * to solve this problem we can use wildcard '*' like 'dashboard.categories.*'
+         * so any route that starts with 'dashboard.categories.' will be always active.
+         * this is done in the config/nav.php file in the 'active' key for each item.
+         *  *  
+         *  Route::current()
+         *      - returns the current route [instance].
+         */
     }
 
     /**
@@ -43,7 +73,7 @@ class Nav extends Component
      */
     public function render()
     {
-        //الريندر ميثود مسئول عن ارجاع ملف الفيو المسئول عن عرض هذا الكومبوننت
+        // render() method is responsible for returning the view that associated with this component.
         return view('components.nav');
     }
 }

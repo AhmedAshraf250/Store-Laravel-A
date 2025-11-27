@@ -22,47 +22,74 @@ class Category extends Model
     public static function rules($id = 0)
     {
         return [
+            /**
+             * Why exclude the current record in unique validation during update?
+             *
+             * When editing a category:
+             * - If the 'name' remains unchanged, the unique validation would fail because it finds the same name in the database (the current record itself).
+             * - To prevent this, we exclude the current record's ID from the unique check,
+             * - fix : ignore the current record by its id
+             * - we passed $id to the rules method to identify the current record.
+             */
 
-            // 'name'=> 'unique:table,column,except,id'
-            // لابد ان نستثنى "الاسم" نفسه عند التعديل مثلا, فى حالة لو عاوز اعدل فى الحقول التانية بس هترك اسم الكاتوجرى كما هو, لن تتم عملية التعديل ودائما سيظهر خطأ يقول ان هذا الاسم موجود بالفعل فى الجدول فى عمود "النايم"ك
-
-            // 'name' => "required|string|min:3|max:255|unique:categoires,name,$id",
+            // 'name' => "required|string|min:3|max:255|unique:categories,name,{$id}",
             'name' => [
                 'required',
                 'string',
                 'min:3',
                 'max:255',
                 Rule::unique('categories', 'name')->ignore($id),
-                // لعمل كاستوم رول او رول خاص بنا يوجد 3 طرق
-                /*
-                1- اول طريقة وهى لو الرول هستخدمه هنا على مستوى هذا الفاليداشن وبعد كدا مش هحتاجه عن طريق -> كالباك او كلوشر فانكشن اى ليس لها اسم لكى استدعيها به ولكن اللارافيل هى من ستستدعيها وتمرر لها الاجريومنتس
-                    هذه الفانكشن بتاخد 3 اجريومنت:ك
-                    <input name="name" value=">
-                        - الاتريبيوت : بيمثل إسم الحقل, اى سيكون اسمه دائما "نايم"ك
-                        - الفاليو : هى القمية التى تم إدخالها فى هذا الحقل, اى القيمة التى كانت فى الريكوست
-                        - الفايلز : هى ليست متغير بل كال باك فانكشن لارافيل هتستدعيها عند حدوث المشكلة, وتحتوى على رسالة الخطأ
-                    اما بداخل هذه الفانكشن نكتب اللوجيك المراد تنفيذه
-                */
+
+
+                // to make Custom Rule, there are 3 ways:    || this only for explanation (for me) || not to be included in the code ||
+                /**
+                    1- This way is local and only used here within this validation array
+                 *      > Using a Closure (Anonymous Function) as a custom validation rule
+                 *          - Signature:
+                 *            function (string $attribute, mixed $value, Closure $fails): void
+                 *      > This function takes 3 arguments: $attribute, $value, $fails    - example: <input name="name" value="">
+                 *          - $attribute: Represents the name of the field, which will always be "name" in this case.
+                 *          - $value: The value entered in this field, i.e., the value present in the request.
+                 *      > Inside the function, we implement the logic to check
+                 */
                 function ($attribute, $value, $fails) {
                     if (strtolower($value) == 'laravel') {
-                        $fails('this name is Forbidden');
+                        $fails("This {$attribute} is Forbidden.");
                     }
                 },
 
-                /*
-                2- هذه الطريقة ستكون عامة ونقدر نستخدم الرول اللى هنعمله بهذه الطريقة فى اكثر من مكان وليس مقتصر فقط بداخل الملف الذى نعرفه به
-                    > php artisan make:rule Filter          // make Class
-                    - بنضيف لقائمة الرولز هنا اوبجيكت من الرول اللى انشئناه
-                */
+                /**
+                    2- This way is global and can be used in multiple places, not just limited to the file where we define it.
+                 *
+                 *  Use this when the validation logic is **shared across multiple forms/controllers**.
+                 * Steps:
+                 * 1. Generate the rule:    > php artisan make:rule Filter               // App\Rules\Filter.php
+                 *          Generated class structure:
+                 *          ├─ passes($attribute, $value): bool  → Core validation logic
+                 *          ├─ message(): string|array          → Custom error message
+                 * 2. Implement the logic in the generated class:
+                 * 3. Use the rule instance in validation:    -example : 'content' => [new FilterForbiddenWords],
+                 */
                 new Filter(['php', 'html']),
 
-                /*
-                3- لارافيل اعطت ميزة تسمى نظام "الماكرز" لارافيل فى اغلت الاوبجيكت خاصتها من ضمنها "الفاليداتور" بتخلينا مثلا نزرع ميثود داخل الكلاس بدون ما نعدل على الكلاس وهذا هو نظام الماكروز
-                     وبالطبع هذا الرول ايضا سيكون على مستوى الابليكاشن وبالتالى انسب مكان لكتابته سيكون فى فلدر "البروفايدرز"ك
-                // look => '\app\Providers\AppServiceProvider.php'
-
-                // فى النهاية لو الرول هستخدمه هنا بس ومش هحتاجه الا هنا مثلا يبقى استخدم الطريقة الاولى اما لو ممكن نحتاجه على مستوى الابليكاشن يبقى نستخدم الطريقة التانية والتالته
-                */
+                /**
+                    3- using a Custom Rule class combined with the Validator Facade to extend the [validation system]:
+                        by [Macros System] is a feature in Laravel that allows us to add custom methods to existing classes without modifying their source code.
+                 *  - This method allows us to define a custom validation rule that can be reused throughout the application.
+                 * Steps:
+                 * 1- Define the custom rule using Validator::extend:
+                 *     - This is typically done in a service provider's boot method (e.g., AppServiceProvider).
+                 * 2- Implement the logic for the custom rule using a Closures:
+                 *      - App\Providers\AppServiceProvider.php
+                            Validator::extend('filter', function ($attribute, $value, $parameters) {
+                                return !in_array(strtolower($value), $parameters);
+                            }, 'The value you entered is forbidden.');
+                 * 3- Use the custom rule in validation: - Example: 'name' => ['filter:css,js,python'],
+                 *
+                    [SUMMARY:]
+                 * if the rule is used here only use the first way (Closure)
+                 * if the rule is used in multiple places in hole application use the second way or the third way
+                 */
                 'filter:css,js,python'
             ],
             'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
@@ -71,14 +98,24 @@ class Category extends Model
         ];
     }
 
+    // [Scopes]:
+    /**
+     *  [Scopes]:
+     *      - Local Scopes: (Defined within the model itself)
+     *         > used to if we want to reuse a query logic multiple times within the same model.
+     *         > helps to keep the code DRY (Don't Repeat Yourself) by encapsulating common query logic.
+     *         > always returns a Builder instance to allow for method chainin,
+     *         > scope always recieves the query builder so that we can add conditions to it.
+     *         > return Builder Object even if not defined in parameters.
+     *         - How to define and use Local Scopes:
+     *            1. Define a method in the model with the prefix "scope" followed by the scope name LIKE : scopeActive, scopeStatus, etc.
+     *            2. when calling the scope, use the scope name without the "scope" prefix.          LIKE : Category::active()->get();
+     *
+     *      - Global Scopes: (Defined as separate classes that implement the Scope interface)
+     *         > applied automatically to all queries for a given model.
+     */
 
-
-    //الاسكوب فكرتها ان لو محتاج انى اطبق اى شئ معين وله علاقة بجملة الاس-كيو-ال
-    // عند تعريف الاسكوب لازم يبدأ او يكون له بداية بريفكس اسمها اسكوب وعند استدعائه يكون بالاسم اللى بعد "إسكوب"ا
-    // الاسكوب دائما بيرجع "بيلدر" اوبجيكت حتى لو ما عرفته او عملت له ديفناشن داخل باراميترز الاسكوب, لكن طبعا يفضل ان يتم تعريفه
-    // \Illuminate\Database\Query\Builder (Scopes always returns Builder Object, Even if I don't pass it on or define it)
-
-    // ضفت اسم الجدول قبل كل اسم كولوم عشان لو استخدم جملة جوين قبل الاسكوب, تجنبا لبعض الكونفلكتات الغير متوقعه
+    // I added the table name before each column name to avoid unexpected conflicts when using a join statement before the scope.
     public function scopeActive(Builder $builder)
     {
         $builder->where('categories.status', 'active');
@@ -93,24 +130,30 @@ class Category extends Model
 
     public function scopeFilter(Builder $builder, $filters)
     {
-        if ($name = $filters['name'] ?? false) { // النايم هنا اساين وليست كومباريشن
-            $builder->where('categories.name', 'LIKE', "%{$name}%");
-        }
+        // when() method will pass the value to the closure only if the value is truthy
+        $builder->when($filters['name'] ?? false, function ($builder, $value) {
+            $builder->where('categories.name', 'LIKE', "%{$value}%");
+        });
+        // if ($name = $filters['name'] ?? false) { // $name here is assignment not comparison
+        //     $builder->where('categories.name', 'LIKE', "%{$name}%");
+        // }
+
         if ($status = $filters['status'] ?? false) {
             $builder->where('categories.status', '=', $status);
         }
         // $categories = Category::filter(request()->query())->Paginate(2); // example in controller
     }
 
-    // Relationships:
 
-    // 'Category' has one parent & But at the same time, it could have many children
-    // سميتها بارينت عشان للدلالة .. لانى عاوز اعرف مين الاب لهذا الكاتيجورى ولذلك هستخدم ايضا "بيلونجس-تو"ك
+    // [Relations]:
+
+    // 'Category' may have one parent only & the same time could have many children categories
+    // named it parent() for clarity and indication
     public function parent()
     {
-        // إذا هستخدم ريلاشن وهذه الريلاشن ممكن ترجعلى "نل" بعنى لا يوجد نتيجه او علاقة هنا ممكن نستخد واحنا بنعمل ديفاين للريلاشن "ويز-ديفلت" والتى هترجعلى مودل فاضى
+        // if the relationship returns null, which means no result, we can define a default value, 
         return $this->belongsTo(Category::class, 'parent_id', 'id')->withDefault([
-            'name' => '-',
+            'name' => '-', // 'name' Column in categories Model which Returned from the relation
         ]);
     }
 
@@ -123,5 +166,18 @@ class Category extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id', 'id');
+    }
+
+    public function scopeWhereNotDescendantOf($query, $category)
+    {
+        return $query->whereNotIn('id', function ($q) use ($category) {
+            $q->select('id')
+                ->from('categories')
+                ->where('parent_id', $category->id);
+        })
+            ->where(function ($q) use ($category) {
+                $q->whereNull('parent_id')
+                    ->orWhere('parent_id', '!=', $category->id);
+            });
     }
 }

@@ -44,8 +44,8 @@ class User extends Authenticatable
 
     public function profile()
     {
-        // ويز ديفالت بترجع انو فى حالة لو طلبت الريلاشن هذه ومكنش فعليا يوجد ريلاشن ليوزر معين بدل ما يرجعلى "نل" هيرجعلى ديفلت
-        // يتم استخدام الويز ديفلت مع علاقات (البيلونجز تو والهاز ون) فقط
+        // withDefault() ensures that if this relation is requested and no result is found,it returns a default model instance instead of "null".
+        // Note: withDefault is only used with "BelongsTo" and "HasOne" relationships.
         return $this->hasOne(Profile::class, 'user_id', 'id')->withDefault();
     }
 }
