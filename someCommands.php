@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Commands Flow in building this application
+ * 
+ * تسلسل الاوامر التى استخدمتها فى البناء
+ *
+ */
+
+
+
+/**
  * # Commands for Laravel:
  *
  *     > php artisan key:generate // '.env' file to generate other key to the Application in that variable 'APP_KEY'
@@ -46,6 +55,15 @@
  * 
  *     > php artisan make:migration add_type_column_to_users_table
  *     > php artisan make:middleware checkUserType          // "app\Http\Middleware\CheckUserType.php"
+ * 
+ *   # Commit [7]:
+ *     > php artisan make:model Cart -m
+ *     > artisan make:observer CartObserver --model=Cart   // Standard name is [ModelObserver] | Directory: "app\Observers\CartObserver.php"
+ *     > php artisan make:controller Front\CartController -r
+ *     > php artisan make:provider CartServiceProvider  // after created this file must be registered in 'app.config' in config folder.
+ *     > php artisan make:component CartMenu // 'app\View\Components\CartMenu.php' // the Goal is passing data dynamicly to the component view
+ *     > npm run prod // to build the assets with [webpack] and [mix] || any changes in js codes must be done in 'resources\js\app.js' then run 'npm run dev'
+ * 
  *
  *
  */
