@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Repositores\Cart\CartRepoistory;
+use App\Repositories\Cart\CartRepository;
 use Illuminate\Http\Request;
 
 
 class CartController extends Controller
 {
 
-    public function __construct(protected CartRepoistory $cart) {}
+    public function __construct(protected CartRepository $cart) {}
 
     /**
      * Display a listing of the resource.
@@ -21,9 +21,11 @@ class CartController extends Controller
     public function index()
     {
         // dd($cart->total());
-
+        // dd($this->cart->get());
         return view('front.cart', ['cart' => $this->cart]);
     }
+
+    public function show($id) {}
 
     /**
      * Store a newly created resource in storage.
@@ -61,6 +63,7 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'quantity' => ['required', 'int', 'min:1'],
         ]);

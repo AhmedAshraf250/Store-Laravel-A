@@ -26,14 +26,11 @@
 $(".item-quantity").on("change", function (e) {
     // (e)  -->> passing the event object
     $.ajax({
-        url: "/cart/" + $(this).data("id"), // cart/1 || custom attribute <input class="item-quantity" data-id="1">
-        method: "PUT",
+        url: "/cart/" + $(this).data("id"), // cart/0d8895a7-d3ef-42b0-ae75-ad57ec9eba1b || custom attribute <input class="item-quantity" data-id="1">
+        method: "put",
         data: {
             quantity: $(this).val(),
             _token: csrf_token,
-        },
-        success: function (response) {
-            // TODO: handle success >> i still working
         },
     });
 });

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositores\Cart;
+namespace App\Repositories\Cart;
 
 use App\Models\Product;
 use Illuminate\Support\Collection;
 
-interface CartRepoistory
+interface CartRepository
 {
     // Repository design pattern
 

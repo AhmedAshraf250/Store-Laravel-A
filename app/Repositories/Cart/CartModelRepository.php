@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositores\Cart;
+namespace App\Repositories\Cart;
 
 use App\Models\Cart;
 use App\Models\Product;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 
-class CartModelRepository implements CartRepoistory
+class CartModelRepository implements CartRepository
 {
     protected $items;
 
@@ -59,7 +59,7 @@ class CartModelRepository implements CartRepoistory
 
     public function empty()
     {
-        return Cart::query()->destroy();
+        Cart::query()->delete();
     }
 
 

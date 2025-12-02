@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Repositores\Cart\CartModelRepository;
-use App\Repositores\Cart\CartRepoistory;
+use App\Repositories\Cart\CartModelRepository;
+use App\Repositories\Cart\CartRepository;
 use Illuminate\Support\ServiceProvider;
 
 class CartServiceProvider extends ServiceProvider
@@ -20,7 +20,7 @@ class CartServiceProvider extends ServiceProvider
         // });
         // when we want to retrieve the CartModelRepository instance -> App::make('cart')
 
-        $this->app->bind(CartRepoistory::class, CartModelRepository::class);
+        $this->app->bind(CartRepository::class, CartModelRepository::class);
 
         /**
          * Now that it's registered in the service container,

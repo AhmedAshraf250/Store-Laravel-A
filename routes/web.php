@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Front\CartController;
+use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -23,6 +24,9 @@ Route::get('/products', [ProductsController::class, 'index'])->name('products.in
 Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show'); // {product:slug} 'slug' will be the default for [model binding] in this route instead of 'id'
 
 Route::resource('/cart', CartController::class);
+
+Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store']);
 
 Route::post('/paypal/webhook', function () {
     echo 'webhook Called'; // Test  

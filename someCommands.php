@@ -7,6 +7,18 @@
  *
  */
 
+/**
+ * php artisan cache:clear 
+ * php artisan config:clear 
+ * php artisan route:clear 
+ * php artisan view:clear 
+ * php artisan optimize:clear
+ * ===============
+ * php artisan config:cache
+ * php artisan route:cache
+ * php artisan optimize
+ */
+
 
 
 /**
@@ -63,8 +75,17 @@
  *     > php artisan make:provider CartServiceProvider  // after created this file must be registered in 'app.config' in config folder.
  *     > php artisan make:component CartMenu // 'app\View\Components\CartMenu.php' // the Goal is passing data dynamicly to the component view
  *     > npm run prod // to build the assets with [webpack] and [mix] || any changes in js codes must be done in 'resources\js\app.js' then run 'npm run dev'
- * 
+ * ***
  *
+ * *   # Commit [8]:
+ *     > php artisan make:model Order -m
+ *     > php artisan make:model OrderItem -m
+ *     > php artisan make:model OrderAdress -m
+ *     > php artisan make:controller Front\CheckoutController
+ *     > php artisan make:migration add_quantity_column_to_products_table
+ *     > php artisan make:listener EmptyCart
+ *     > php artisan make:listener DeductProductQuantity
+ *     > php artisan make:event OrderCreated 
  *
  */
 
