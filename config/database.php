@@ -63,7 +63,7 @@ return [
             ]) : [],
         ],
 
-        'mysql2' => [
+        'customName   ' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB2_HOST', '127.0.0.1'),

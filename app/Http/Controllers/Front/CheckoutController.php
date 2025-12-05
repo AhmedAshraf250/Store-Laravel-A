@@ -80,7 +80,8 @@ class CheckoutController extends Controller
         // DB Transaction → All or nothing
         // Ensures data consistency: if any query fails → rollback everything
 
-        DB::beginTransaction();
+        // DB::connection('custom_connection_name_in_config')->beginTransaction();
+        DB::beginTransaction(); // Default connection
 
         /**
          * How [Database Transactions] Work in Laravel (The Auto-Commit Secret)
@@ -126,7 +127,7 @@ class CheckoutController extends Controller
 
                 $orders->push($order);
             }
-
+            // dd($orders);
             DB::commit();
 
             /**
@@ -167,12 +168,11 @@ class CheckoutController extends Controller
             //     event('order.created', $order, Auth::user());
             // }
             event(new OrderCreated($orders, Auth::user()));
-            return redirect()->route('cart.index')->with('success', 'Order placed successfully');
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-
-        return redirect()->route('orders.payments.create', $order->id);
+        return redirect()->route('cart.index')->with('success', 'Order placed successfully');
+        // return redirect()->route('orders.payments.create', $order->id);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class DeductProductQuantity
 {
@@ -57,11 +58,14 @@ class DeductProductQuantity
         // $orders >> Order Model have "items" relation >> Returns OrderItem Model which have "product" relation >> Returns Product Model
         // Order Model >> OrderItem Model >> Product Model
         // loadMissing() to load the missing relationships [eager loading] seems to with() method
-        $event->orders->loadMissing('items.product');
-        foreach ($event->orders as $order) {
-            foreach ($order->items as $item) {
-                $item->product->decrement('quantity', $item->quantity);
+        try {
+            $event->orders->loadMissing('items.product');
+            foreach ($event->orders as $order) {
+                foreach ($order->items as $item) {
+                    $item->product->decrement('quantity', $item->quantity);
+                }
             }
+        } catch (Throwable $e) {
         }
     }
 }

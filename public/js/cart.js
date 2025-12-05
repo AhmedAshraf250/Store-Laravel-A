@@ -33,7 +33,7 @@ $(".item-quantity").on("change", function (e) {
   $.ajax({
     url: "/cart/" + $(this).data("id"),
     // cart/0d8895a7-d3ef-42b0-ae75-ad57ec9eba1b || custom attribute <input class="item-quantity" data-id="1">
-    method: "PUT",
+    method: "put",
     data: {
       quantity: $(this).val(),
       _token: csrf_token

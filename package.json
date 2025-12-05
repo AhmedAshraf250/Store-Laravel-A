@@ -7,7 +7,9 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "mailpit": ".\\tools\\mailpit.exe",
+        "mailpit:open": "start http://127.0.0.1:8025 && .\\tools\\mailpit.exe"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
@@ -18,5 +20,9 @@
         "lodash": "^4.17.19",
         "postcss": "^8.4.6",
         "tailwindcss": "^3.1.0"
+    },
+    "dependencies": {
+        "laravel-echo": "^2.2.6",
+        "pusher-js": "^8.4.0"
     }
 }
