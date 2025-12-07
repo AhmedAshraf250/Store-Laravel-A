@@ -86,20 +86,47 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-12">
                         <div class="top-end">
-                            <div class="user">
-                                <i class="lni lni-user"></i>
-                                Hello
-                            </div>
-                            <ul class="user-login">
-                                <li>
-                                    <a href="login.html">Sign In</a>
-                                </li>
-                                <li>
-                                    <a href="register.html">Register</a>
-                                </li>
-                            </ul>
+                            @auth('web')
+                                <div class="user-menu">
+                                    <div class="user">
+                                        <i class="lni lni-user"></i>
+                                        <span>{{ auth('web')->user()->name }}</span>
+                                    </div>
+
+                                    <ul class="user-login">
+                                        <li>
+                                            <a href="#" class="logout-link"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i class="lni lni-exit"></i>
+                                                Logout
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            @else
+                                <div class="user-menu">
+                                    <div class="user">
+                                        <i class="lni lni-user"></i>
+                                        Hello
+                                    </div>
+
+                                    <ul class="user-login">
+                                        <li>
+                                            <a href="{{ route('login') }}">Sign In</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('register') }}">Register</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endauth
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

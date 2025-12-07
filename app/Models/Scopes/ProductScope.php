@@ -2,6 +2,7 @@
 
 namespace App\Models\Scopes;
 
+use App\Models\Admin;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -19,7 +20,7 @@ class ProductScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         $user = Auth::user();
-        if ($user && $user->store_id) {
+        if ($user instanceof Admin && $user->store_id) {
             $builder->where('store_id', '=', $user->store_id);
         }
     }

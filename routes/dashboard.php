@@ -15,9 +15,12 @@ use Illuminate\Support\Facades\Route;
 //]);
 
 Route::group([
-    'middleware' => ['auth', 'auth.type:super-admin,admin'],
+    'middleware' => [
+        'auth:admin', // auth:{guard} Like: auth:admin,web
+        // 'auth.type:super-admin,admin'
+    ],
     'as' => 'dashboard.',
-    'prefix' => 'dashboard',
+    'prefix' => 'admin/dashboard',
     // 'namespace' => 'App\Http\Controllers\Dashboard',
 ], function () {
     //    Route::get('/', ['DashboardController@index']);

@@ -110,7 +110,7 @@
  *     > php artisan make:event OrderCreated 
  *  ***
  * 
- *   # Commit [10]:
+ *   # Commit [10]: feat(notifications): implement initial notifications using database, mail, broadcast & queue
  *     > php artisan make:notification OrderCreatedNotification
  *     > php artisan make:listener SendOrderCreatedNotification
  *     > npm run mailpit // to start mailpit server || I initialize it in 'package.json' file >>> "mailpit": ".\\tools\\mailpit.exe",
@@ -122,6 +122,13 @@
  *     > php artisan queue:table                                                         // [Migration: 'create_jobs_table']
  *     > php artisan queue:work  
  *     > npm install --save laravel-echo pusher-js
+ * ***
+ * 
+ *   # Commit [11]:
+ *     > composer require laravel/fortify
+ *     > php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
+ *     > composer require barryvdh/laravel-debugbar --dev  // To remove it 'composer remove barryvdh/laravel-debugbar'  // [DebugBar]
+ *     > php artisan make:factory AdminFactory
  */
 
 use Illuminate\Support\Facades\Auth;

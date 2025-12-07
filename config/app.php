@@ -172,11 +172,12 @@ return [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class, // added
         App\Providers\AuthServiceProvider::class,
-        App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class, // uncomment
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\CartServiceProvider::class,
+        App\Providers\CartServiceProvider::class, // added
 
     ],
 
