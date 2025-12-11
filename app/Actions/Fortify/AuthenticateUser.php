@@ -3,11 +3,12 @@
 namespace App\Actions\Fortify;
 
 use App\Models\Admin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticateUser
 {
-    public function authenticate($request)
+    public function authenticate(Request $request)
     {
         $username = $request->post(config('fortify.username'));
         $password = $request->post('password');

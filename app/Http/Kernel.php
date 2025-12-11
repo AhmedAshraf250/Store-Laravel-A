@@ -38,15 +38,17 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
-            // Added by me
-            \App\Http\Middleware\UpdateUserLastActiveAt::class,
-            \App\Http\Middleware\MarkNotificationAsRead::class
+
+            \App\Http\Middleware\UpdateUserLastActiveAt::class, // Added by me
+            \App\Http\Middleware\MarkNotificationAsRead::class // Added by me
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            \App\Http\Middleware\CheckApiToken::class, // added by me
         ],
     ];
 
@@ -68,7 +70,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // added by me
-        'auth.type' => \App\Http\Middleware\CheckUserType::class
+        'auth.type' => \App\Http\Middleware\CheckUserType::class // added by me
     ];
 }

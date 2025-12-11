@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ProductScope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,22 @@ class Product extends Model
         'status',
     ];
 
+    // Columns considered sensitive; Laravel will hide them in JSON responses
+    protected $hidden = [
+        'updated_at',
+        'created_at'
+    ];
+
+    // Appended attributes are mainly used for API / JSON responses.
+    // They ensure that accessor-generated properties appear in the output, when the model is converted to JSON.
+    // they can still be accessed as normal properties internally.
+    protected $appends = [
+        // If an accessor is listed here but not defined in the model, an error will occur.
+        // When the model is converted to JSON, each appended accessor will appear as a key
+        // with its value coming from the accessor's return value.
+        'image_url'
+    ];
+
     /**
      * the booted() method is used to define global scopes or automatic behaviors
      * that should run every time the model is used. This means that on any query
@@ -45,12 +62,14 @@ class Product extends Model
 
         // > php artisan make:scope ProductScope // app\Models\Scopes\ProductScope.php
         static::addGlobalScope('store', new ProductScope());
+        static::creating(
+            fn(Product $product) => $product->slug = Str::slug($product->name)
+        );
     }
 
 
 
-    // [Relations]:
-
+    // =================== [Relations] =================== //
     // foreach($products as $product) {
     //     $product->category->name     // OR //    $product->category()->first()->name
     //     $product->store->name        // OR //    $product->store()->first()->name
@@ -93,23 +112,60 @@ class Product extends Model
         // In Laravel IF Making Names with Default Just short this Code In => [return $this->belongsToMany(Tag::class);] ||| Laravel will do the rest auto
     }
 
-    public function scopeActive(Builder $builder)
-    {
-        $builder->where('status', '=', 'active');
-    }
-
-    // [Accessors]:
+    // =================== [Accessors] =================== //
     //      Difinition -> 'CamelCase' || invoke -> 'snake_case'  {{ $Model->image_url }}
-    public function getImageUrlAttribute()
+
+    // public function getImageUrlAttribute()
+    // {
+    //     // return default image
+    //     if (!$this->image) {
+    //         return 'https://www.incathlab.com/images/products/default_product.png';
+    //     }
+    //     if (Str::startsWith($this->image, ['http://', 'https://'])) {
+    //         return $this->image;
+    //     }
+    //     return asset('storage/' . $this->image);
+    // }
+    // [OR]:
+    // protected function imageUrl(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: function () {
+    //             if (!$this->image) {
+    //                 return 'https://www.incathlab.com/images/products/default_product.png';
+    //             }
+    //             if (Str::startsWith($this->image, ['http://', 'https://'])) {
+    //                 return $this->image;
+    //             }
+    //             return asset('storage/' . $this->image);
+    //         }
+    //     );
+    // }
+    // [OR]:
+    // protected function image(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: function ($value) { // $value = $this->image || $value = the name of the method in that case it will be 'image'
+    //             if (!$value) {
+    //                 return 'https://www.incathlab.com/images/products/default_product.png';
+    //             }
+    //             if (Str::startsWith($value, ['http://', 'https://'])) {
+    //                 return $value;
+    //             }
+    //             return asset('storage/' . $value);
+    //         }
+    //     );
+    // }
+    // [OR]:
+    protected function imageUrl(): Attribute // $product->image_url || $product->imageUrl
     {
-        // return default image
-        if (!$this->image) {
-            return 'https://www.incathlab.com/images/products/default_product.png';
-        }
-        if (Str::startsWith($this->image, ['http://', 'https://'])) {
-            return $this->image;
-        }
-        return asset('storage/' . $this->image);
+        return Attribute::make(
+            get: fn() => $this->image
+                ? (Str::startsWith($this->image, ['http://', 'https://'])
+                    ? $this->image
+                    : asset('storage/' . $this->image))
+                : 'https://www.incathlab.com/images/products/default_product.png'
+        );
     }
 
     public function getSalePercentAttribute()
@@ -118,5 +174,51 @@ class Product extends Model
             return 0;
         }
         return round(100 - (100 * $this->price / $this->compare_price), 1);
+    }
+
+    // =================== [Scopes] =================== //
+    public function scopeActive(Builder $builder)
+    {
+        $builder->where('status', '=', 'active');
+    }
+
+    public function scopeFilter(Builder $builder, array $filters)
+    {
+        // 
+        $options = array_merge([
+            'category_id' => null,
+            'store_id' => null,
+            'tag_id' => null,
+            'status' => 'active',
+        ], $filters);
+
+        $builder->when($options['category_id'] ?? false, function ($builder, $category_id) {
+            $builder->where('category_id', $category_id);
+        });
+
+        $builder->when($options['store_id'] ?? false, function ($builder, $store_id) {
+            $builder->where('store_id', $store_id);
+        });
+
+        $builder->when($options['tag_id'] ?? false, function ($builder, $tag_id) {
+
+            // $builder->whereHas('tags', function ($query) use ($tag_id) {
+            //     $query->where('id', $tag_id);
+            // });
+
+            // $builder->selectRaw('id IN (SELECT product_id FROM product_tag WHERE tag_id = ?)', [$tag_id]);
+
+            // $builder->whereRaw('EXISTS (SELECT 1 FROM product_tag WHERE product_id = products.id AND tag_id = ?)', [$tag_id]); // much faster
+            $builder->whereExists(function ($query) use ($tag_id) {
+                $query->select(1)
+                    ->from('product_tag')
+                    ->whereRaw('product_id = products.id')
+                    ->where('tag_id', $tag_id);
+            });
+        });
+
+        $builder->when($options['status'] ?? false, function ($builder, $status) {
+            $builder->where('status', $status);
+        });
     }
 }

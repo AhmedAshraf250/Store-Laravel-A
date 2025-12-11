@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -64,5 +65,7 @@ class AppServiceProvider extends ServiceProvider
          * Paginator::defaultView('pagination.custom');
          *  - This sets the default view for pagination links to a custom view located at 'resources\views\pagination\custom.blade.php'.
          */
+
+        JsonResource::withoutWrapping(); // Removes the default "data" wrapper from single JSON resources. so the response returns the object directly.
     }
 }

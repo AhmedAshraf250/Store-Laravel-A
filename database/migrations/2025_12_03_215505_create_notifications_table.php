@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('type');
+            $table->string('type'); // Notification Type Like: [App\Notifications\*] the Notification which will be sent
             /**
              * $table->morphs('notifiable');
              * → Automatically creates two columns:

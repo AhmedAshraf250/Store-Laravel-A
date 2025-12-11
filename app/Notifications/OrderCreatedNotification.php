@@ -174,7 +174,7 @@ class OrderCreatedNotification extends Notification
          * 2. CHANNEL TYPES
          * -----------------------------------------------------------
          * A. Public  -> Open to everyone -> No Login required.
-         * B. Private -> Secure -> Requires Login (Auth) -> Used here! ✅
+         * B. Private -> Secure -> Requires Login (Auth) -> Used here!
          *
          * -----------------------------------------------------------
          * 3. LOGIC FOR THIS NOTIFICATION

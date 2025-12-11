@@ -117,18 +117,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-        /**
-         * When passing a class method:
-         * - Instance method → pass an object
-         * - Static method   → pass the class name only
-         *
-         * Example (static):
-         * Fortify::authenticateUsing([AuthenticateUser::class, 'authenticate']);
-         *
-         * Example (instance):
-         * Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
-         *      - By placing this inside the boot method, Fortify will use this authentication logic for ALL guards (web, admin, or any other guard).
-         */
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
@@ -160,8 +148,20 @@ class FortifyServiceProvider extends ServiceProvider
         //     return view('auth.confirm-password');
         // });
 
-        // $prefix = config('fortify.prefix', 'auth/');
 
+
+        /**
+         * When passing a class method:
+         * - Instance method → pass an object
+         * - Static method   → pass the class name only
+         *
+         * Example (static):
+         * Fortify::authenticateUsing([AuthenticateUser::class, 'authenticate']);
+         *
+         * Example (instance):
+         * Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
+         *      - By placing this inside the boot method, Fortify will use this authentication logic for ALL guards (web, admin, or any other guard).
+         */
         if (Config::get('fortify.guard') == 'admin') {
             Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
             Fortify::viewPrefix('auth.');

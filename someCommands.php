@@ -2,16 +2,16 @@
 
 /**
  * Commands Flow in building this application
- * 
+ *
  * تسلسل الاوامر التى استخدمتها فى البناء
  *
  */
 
 /**
- * php artisan cache:clear 
- * php artisan config:clear 
- * php artisan route:clear 
- * php artisan view:clear 
+ * php artisan cache:clear
+ * php artisan config:clear
+ * php artisan route:clear
+ * php artisan view:clear
  * php artisan optimize:clear
  * ===============
  * php artisan config:cache
@@ -26,41 +26,41 @@
  *
  *     > php artisan key:generate // '.env' file to generate other key to the Application in that variable 'APP_KEY'
  *     > php artisan config:cache // to cache the config files for better performance // look: 'bootstrap\cache\config.php'
- *     > php artisan config:clear 
+ *     > php artisan config:clear
  *     > php artisan route:list   // {very importat to know all application routes and their names}
  *     > composer dump-autoload // to regenerate the list of all classes that need to be included in the project (autoloading)
  *     > php artisan migrate:status  // [Result]: Migration name .... Batch / Status
  * ***
- * 
+ *
  *   # Commit [1]: first commit For Project V0.6 --> still Loding...
  *     > php artisan storage:link  // look 'config\filesystems.php'->['links']
  *     > php artisan make:request CategoryRequest
  *     > php artisan make:rule Filter // 'app\Rules\Filter.php' For Validation
  * ***
- * 
+ *
  *   # Commit [2]: Appling & Adding Components(Class-based Components + Anonymous Components)
  *     > php artisan make:component alert --view  // --view ->()  : to create "View-Only Component"  -> look: 'resources\views\components\alert.blade.php'
  *     > php artisan make:component form.input --view  // 'resources\views\components\form\input.blade.php'
  *     > php artisan make:component Nav          // "Full Component" ->  look: 'app\View\Components\Nav.php' & 'resources\views\components\nav.blade.php'
  * ***
- * 
+ *
  *   # Commit [3]: adding Pagination to categories tab, and make some modifications of defualt laravel Pagination
  *     > php artisan vendor:publish --tag=laravel-pagination // to make modifications on default pagination styles // LOOK: 'resources\views\vendor\pagination'Folder
  * ***
- * 
- * 
+ *
+ *
  *   # Commit [4]: adding & apply local and Global Scopes with impelement softDelets and adding some columns to exist tables, make seed with factories
  *     > php artisan make:migration add_softDeletes_to_categories_table
  *     > php artisan make:seeder UsersSeeder                // to create seeder class
  *     > php artisan db:seed --class=UserTableSeeder        // to run specific seeder class
  *     > php artisan make:factory ProductFactory            // to create factory class Dir: 'database/factories/ProductFactory.php'
- *     > php artisan make:factory CategoryFactory            
- *     > php artisan make:factory StoreFactory            
+ *     > php artisan make:factory CategoryFactory
+ *     > php artisan make:factory StoreFactory
  *     > php artisan db:seed                                // to run the main seeder 'DatabaseSeeder.php'
  *          ==> It will execute the code it finds in the "DatabaseSeeder.php" class (with "call" method) -> (for Use with many seeders if available)
  *     > php artisan make:migration add_store_id to_users_table
  *     > php artisan make:controller Dashboard\CategoriesController -r // -r => resource controller (with all methods inside showed in 'php artisan route:list')
- *          (7 methods: index, create, store, show, edit, update, destroy) 
+ *          (7 methods: index, create, store, show, edit, update, destroy)
  *     > php artisan make:scope ProductScope
  *     > composer require --dev mbezhanov/laravel-faker-provider-collection
  * ***
@@ -72,24 +72,24 @@
  *     > php artisan make:controller Dashboard\ProfileController
  *     > composer require symfony/intl
  * ***
- * 
- * 
+ *
+ *
  *   # Commit [6]: feat: add front interface layout with their components and middlewares
- *     > php artisan make:component FrontLayout 
+ *     > php artisan make:component FrontLayout
  *          -> [make 2 Files] ->'app\View\Components\FrontLayout.php'  [render]--->  'resources\views\components\front-layout.blade.php'
- *     > php artisan make:controller Front\HomeController 
+ *     > php artisan make:controller Front\HomeController
  *     > php artisan make:controller Front\ProductsController
  *     > php artisan make:migration add_type_column_to_users_table
  *     > php artisan make:migration add_last_active_at_column_to_users_table
  *     > php artisan make:middleware checkUserType          // "app\Http\Middleware\CheckUserType.php"
  *     > php artisan make:middleware UpdateUserLastActiveAt
- * 
- * 
+ *
+ *
  *   # Commit [7]: chore: remove (app/js) built asset and ignore it
  *     > rm -rf resources/js/app.js
  * ***
- * 
- * 
+ *
+ *
  *   # Commit [8]: Cart: initial shopping cart implementation using Repository Pattern, contract binding, constructor injection, custom facade & observer (WIP)
  *     > php artisan make:model Cart -m
  *     > artisan make:observer CartObserver --model=Cart   // Standard name is [ModelObserver] | Directory: "app\Observers\CartObserver.php"
@@ -107,9 +107,9 @@
  *     > php artisan make:migration add_quantity_column_to_products_table
  *     > php artisan make:listener EmptyCart
  *     > php artisan make:listener DeductProductQuantity
- *     > php artisan make:event OrderCreated 
+ *     > php artisan make:event OrderCreated
  *  ***
- * 
+ *
  *   # Commit [10]: feat(notifications): implement initial notifications using database, mail, broadcast & queue
  *     > php artisan make:notification OrderCreatedNotification
  *     > php artisan make:listener SendOrderCreatedNotification
@@ -120,15 +120,23 @@
  *     > php artisan make:component Dashboard\NotificationsMenu
  *     > php artisan make:middleware MarkNotificationAsRead
  *     > php artisan queue:table                                                         // [Migration: 'create_jobs_table']
- *     > php artisan queue:work  
+ *     > php artisan queue:work
  *     > npm install --save laravel-echo pusher-js
  * ***
- * 
- *   # Commit [11]:
+ *
+ *   # Commit [11]: feat(auth): implement multi-guard authentication with Fortify + 2FA support
  *     > composer require laravel/fortify
  *     > php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
  *     > composer require barryvdh/laravel-debugbar --dev  // To remove it 'composer remove barryvdh/laravel-debugbar'  // [DebugBar]
  *     > php artisan make:factory AdminFactory
+ * ***
+ *
+ *   # Commit [12]: feat(api): implement Sanctum authentication and start building API resources/endpoints
+ *     > php artisan make:controller Api\ProductsController --api
+ *     > php artisan make:resource ProductResource
+ *     > php artisan make:controller Api\AccessTokensController
+ *     > php artisan make:middleware CheckApiToken
+ *
  */
 
 use Illuminate\Support\Facades\Auth;
