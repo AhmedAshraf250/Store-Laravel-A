@@ -40,7 +40,8 @@ class Kernel extends HttpKernel
 
 
             \App\Http\Middleware\UpdateUserLastActiveAt::class, // Added by me
-            \App\Http\Middleware\MarkNotificationAsRead::class // Added by me
+            \App\Http\Middleware\MarkNotificationAsRead::class, // Added by me
+
         ],
 
         'api' => [
@@ -70,6 +71,13 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        'auth.type' => \App\Http\Middleware\CheckUserType::class // added by me
+        'auth.type' => \App\Http\Middleware\CheckUserType::class, // added by me
+        // 'setLocale' => \App\Http\Middleware\SetAppLocale::class, // added by me
+        'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
+        'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+        'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+        'localeCookieRedirect'    => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
+        'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class
+
     ];
 }

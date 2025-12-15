@@ -55,8 +55,12 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+
     'api_token' => env('API_TOKEN', 'secret'),
+
     'asset_url' => env('ASSET_URL', null),
+
+    'currency' => 'USD',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,6 +100,8 @@ return [
     */
 
     'fallback_locale' => 'en',
+
+    'available_locales' => ['en', 'es', 'fr', 'ar', 'in', 'cn'],
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +183,7 @@ return [
         App\Providers\BroadcastServiceProvider::class, // uncomment
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
         App\Providers\CartServiceProvider::class, // added
 
     ],

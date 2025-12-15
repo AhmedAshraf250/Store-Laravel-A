@@ -1,0 +1,25 @@
+{
+    "Home": "الرئيسية",
+    "Hello": "مرحبا",
+    "About Us": "من نحن",
+    "Contact Us": "اتصل بنا",
+    "Sing In": "تسجيل الدخول",
+    "Register": "التسجيل",
+    "Logout": "تسجيل الخروج",
+    "Cart": "عربة التسوق",
+    "Checkout": "الدفع",
+    "Profile": "الملف الشخصي",
+    "Dashboard": "لوحة التحكم",
+    "Products": "المنتجات",
+    "Categories": "الفئات",
+    "Search": "بحث",
+    "Price": "السعر",
+    "Currency": "العملة",
+    "Quantity": "الكمية",
+    "Total": "المجموع",
+    "Subtotal": "المجموع الفرعي",
+    "Tax": "الضريبة",
+    "Shipping": "الشحن",
+
+    "--- IGNORE ---": " to get this word by : Lang::get('app.home') or __('app.home') or trans('app.home') "
+}

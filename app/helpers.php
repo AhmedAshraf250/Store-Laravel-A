@@ -39,4 +39,16 @@ if (!function_exists('gen_ran_str')) {
 
         return $fallback ?? asset('storage/uploads/product.png');
     }
+
+    if (! function_exists('localized_route')) {
+        function localized_route(string $name, array $params = [])
+        {
+            $params = array_merge([
+                'locale' => app()->getLocale()
+            ], $params);
+
+
+            return route($name, $params);
+        }
+    }
 }

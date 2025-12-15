@@ -136,6 +136,14 @@
  *     > php artisan make:resource ProductResource
  *     > php artisan make:controller Api\AccessTokensController
  *     > php artisan make:middleware CheckApiToken
+ * ***
+ * 
+ *   # Commit [13]: 
+ *     > php artisan make:controller Front\CurrencyConverterController
+ *     > composer require laravel/telescope --dev    >    php artisan telescope:install    >    php artisan migrate
+ *     > php artisan make:middleware SetAppLocale
+ *     > composer require mcamara/laravel-localization
+ *     > php artisan vendor:publish --provider="Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider"
  *
  */
 

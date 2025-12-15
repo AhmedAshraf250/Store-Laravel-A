@@ -151,7 +151,7 @@ return [
     |
     */
 
-    'features' => [
+    'features' => [ // Routes
         Features::registration(), // @if (Route::has('register')) <a href="{{ route('register') }}">Register</a> @endif
         Features::resetPasswords(), // @if(Route::has('password.request')) <a href="{{ route('password.request') }}">Forgot password?</a> @endif
         Features::emailVerification(),

@@ -52,6 +52,13 @@
       0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
     ),
   ),
+  'laravel/telescope' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Telescope\\TelescopeServiceProvider',
+    ),
+  ),
   'laravel/tinker' => 
   array (
     'providers' => 
@@ -64,6 +71,17 @@
     'providers' => 
     array (
       0 => 'Bezhanov\\Faker\\Laravel\\FakerServiceProvider',
+    ),
+  ),
+  'mcamara/laravel-localization' => 
+  array (
+    'aliases' => 
+    array (
+      'LaravelLocalization' => 'Mcamara\\LaravelLocalization\\Facades\\LaravelLocalization',
+    ),
+    'providers' => 
+    array (
+      0 => 'Mcamara\\LaravelLocalization\\LaravelLocalizationServiceProvider',
     ),
   ),
   'nesbot/carbon' => 

@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
+use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +21,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    // 'prefix' => '{locale?}',
+    // 'where' => ['locale' => 'en|es|fr|ar|in|cn'],
+    'middleware' => [
+        'localeSessionRedirect',
+        'localizationRedirect',
+        'localeViewPath',
 
-Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
-Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show'); // {product:slug} 'slug' will be the default for [model binding] in this route instead of 'id'
+        // 'setLocale'
+    ],
+    // 'where' => ['locale' => '[a-z]{2}']
+], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::resource('/cart', CartController::class);
+    Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+    Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show'); // {product:slug} 'slug' will be the default for [model binding] in this route instead of 'id'
 
-Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store']);
+    Route::resource('/cart', CartController::class);
 
-Route::view('/auth/user/2fa', 'front.auth.two-factor-auth')->name('front.2fa')->middleware('auth');
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store']);
+
+    Route::view('/auth/user/2fa', 'front.auth.two-factor-auth')->name('front.2fa')->middleware('auth');
+
+    Route::post('/currency', [CurrencyConverterController::class, 'store'])->name('currency.store');
+});
+
+
+Route::get('/cache', [TestController::class, 'cache']);
 
 // For Test  ----------------
 Route::post('/paypal/webhook', function () {
@@ -46,6 +68,10 @@ Route::post('/paypal/webhook', function () {
 // From Laravel Breeze:------------------------
 
 require __DIR__ . '/dashboard.php';
+
+// Route::fallback(function () {
+//     return redirect('/' . config('app.locale'));
+// });
 
 
 
