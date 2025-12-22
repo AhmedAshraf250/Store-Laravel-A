@@ -50,4 +50,19 @@ class TestController extends Controller
 
         dd($allCache);
     }
+
+    public function cache2()
+    {
+        // just add that following code before any caching operation if you want to debug that cache and track its keys
+        // $keys = Cache::get('debug_cache_keys', []);  >>>  $keys[] = $cacheKey; >>>  Cache::put('debug_cache_keys', $keys);
+
+        $keys = Cache::get('debug_cache_keys', []);
+
+        $data = collect($keys)
+            ->mapWithKeys(fn($key) => [
+                $key => Cache::get($key)
+            ]);
+
+        return response()->json($data);
+    }
 }

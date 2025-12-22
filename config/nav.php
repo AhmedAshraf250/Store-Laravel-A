@@ -13,26 +13,51 @@ return [
         'route' => 'dashboard.categories.index',
         'title' => 'Categories',
         'badge' => 'new',
-        'active' => 'dashboard.categories.*'
+        'active' => 'dashboard.categories.*',
+        'ability' => 'categories.view' // to show this nav item only for users who have this ability
     ],
     [
         'icon' => 'nav-icon fas fa-edit',
         'route' => 'dashboard.categories.index',
         'title' => 'Stores',
-        'active' => 'dashboard.stores.*'
+        'active' => 'dashboard.stores.*',
+        'ability' => 'stores.view'
     ],
     [
         'icon' => 'nav-icon fas fa-columns',
         'route' => 'dashboard.products.index',
         'title' => 'Products',
-        'active' => 'dashboard.products.*'
+        'active' => 'dashboard.products.*',
+        'ability' => 'products.view',
     ],
     [
         'icon' => 'nav-icon fas fa-columns',
         'route' => 'dashboard.categories.index',
         'title' => 'Orders',
-        'active' => 'dashboard.orders.*'
-    ]
+        'active' => 'dashboard.orders.*',
+        'ability' => 'orders.view',
+    ],
+    [
+        'icon' => 'nav-icon fas fa-shield-alt',
+        'route' => 'dashboard.roles.index',
+        'title' => 'Roles',
+        'active' => 'dashboard.roles.*',
+        'ability' => 'roles.view',
+    ],
+    [
+        'icon' => 'nav-icon fas fa-users',
+        'route' => 'dashboard.users.index',
+        'title' => 'Users',
+        'active' => 'dashboard.users.*',
+        'ability' => 'users.view',
+    ],
+    [
+        'icon' => 'nav-icon fas fa-user-shield',
+        'route' => 'dashboard.admins.index',
+        'title' => 'Admins',
+        'active' => 'dashboard.admins.*',
+        'ability' => 'admins.view',
+    ],
 ];
 
 /**

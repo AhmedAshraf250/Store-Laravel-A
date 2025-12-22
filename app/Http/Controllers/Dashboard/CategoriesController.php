@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -20,6 +21,14 @@ class CategoriesController extends Controller
 	 */
 	public function index()
 	{
+		// It is best practice to check permissions before executing the action.
+		//
+		// The currently authenticated user is passed to the Gate closure associated with the ability name "category.view". [look: at AuthServiceProvider.php]
+		// Gate::authorize('category.view'); 
+		if (!Gate::allows('categories.view')) {
+			abort(403); // Forbidden
+		}
+
 		$request = request(); // return request object from service container
 		/**
 		 *	*  * [Explanation]:
@@ -65,10 +74,23 @@ class CategoriesController extends Controller
 
 		// $parents = Category::all()->pluck('name', 'id')->toArray();
 
-		return view(
-			'dashboard.categories.index',
-			compact('categories'/* , 'parents' */)
-		);
+		return view('dashboard.categories.index', compact('categories'/* , 'parents' */));
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		if (Gate::denies('categories.create')) {
+			abort(403); // Forbidden
+		}
+		// $category = new Category;
+		$cate_parents = Category::all();
+
+		return view('dashboard.categories.create', compact('cate_parents'));
 	}
 
 	/**
@@ -80,6 +102,9 @@ class CategoriesController extends Controller
 	 */
 	public function store(Request $request)
 	{
+
+		Gate::authorize('categories.create'); // If not authorized, automatically throws 403 Forbidden
+
 		/**
 		 * عندما يحدث خطأ في رول او قاعدة ما داخل ميثود "فاليدات" في لارافيل، يحدث السيناريو التالي
 		 * 
@@ -175,18 +200,6 @@ class CategoriesController extends Controller
 		// 		- Perfect for one-time alerts: success, error, info, warning	
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		// $category = new Category;
-		$cate_parents = Category::all();
-
-		return view('dashboard.categories.create', compact('cate_parents'));
-	}
 
 	/**
 	 * Display the specified resource.
@@ -197,6 +210,8 @@ class CategoriesController extends Controller
 	 */
 	public function show(Category $category)
 	{
+		Gate::authorize('categories.view'); // If not authorized, throws 403 Forbidden
+
 		/**
 		 * Implicit Route Model Binding
 		 *
@@ -224,6 +239,8 @@ class CategoriesController extends Controller
 	 */
 	public function edit($id)
 	{
+		Gate::authorize('categories.update');
+
 		try {
 			$category = Category::find($id);
 			if (! $category) {
@@ -262,6 +279,8 @@ class CategoriesController extends Controller
 	 */
 	public function update(CategoryRequest $request, $id)
 	{
+		// Gate::authorize('category.update');
+
 		// $request->validate(Category::rules($id));
 
 		$category = Category::find($id);
@@ -298,6 +317,8 @@ class CategoriesController extends Controller
 	 */
 	public function destroy($id)
 	{
+		Gate::authorize('categories.delete');
+
 		$category = Category::findorfail($id);
 		$category->delete();
 

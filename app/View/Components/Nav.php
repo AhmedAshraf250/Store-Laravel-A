@@ -49,7 +49,7 @@ class Nav extends Component
         // config files always return an array
         // so I create the nav file inside the config folder to hold the nav items data
 
-        $this->items = config('nav');
+        $this->items = $this->prepareItems(config('nav'));
         // $this->active = Route::currentRouteName(); // 
         /**
          *  Route::currentRouteName()
@@ -75,5 +75,18 @@ class Nav extends Component
     {
         // render() method is responsible for returning the view that associated with this component.
         return view('components.nav');
+    }
+
+    protected function prepareItems($items)
+    {
+        $user = auth()->user();
+
+        foreach ($items as $key => $item) {
+            if (isset($item['ability']) && !$user->can($item['ability'])) {
+                unset($items[$key]);
+            }
+        }
+
+        return $items;
     }
 }

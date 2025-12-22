@@ -1,5 +1,12 @@
 # Laravel Request Lifecycle - Complete Guide
 
+1. Bootstrap                                             [Bootstrap]
+2. Register Service Providers                            [Bootstrap]          
+3. Boot Service Providers                                [Bootstrap]
+4. Load Routes                                           {RunTime}
+5. Handle Request (middleware, auth, controller)         {RunTime}
+6. Render Response (views)                               {RunTime}
+
 
 ╔═════════════════════════════════════════════════════════════════════════╗
 ║                    LARAVEL REQUEST LIFECYCLE DIAGRAM                    ║

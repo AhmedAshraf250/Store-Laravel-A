@@ -27,13 +27,16 @@ use Illuminate\Support\Facades\Route;
  * DELETE   /products/{id}     // Delete product
  */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    // return $request->user();
-    return Auth::guard('sanctum')->user();
-});
+Route::name('api.')
+    ->group(function () {
 
-// apiResource() => [index, show, store, update, destroy]
-Route::apiResource('/products', ProductsController::class);
+        Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+            return Auth::guard('sanctum')->user();
+        });
+        // apiResource() => [index, show, store, update, destroy]
+        Route::apiResource('products', ProductsController::class);
 
-Route::post('auth/access-tokens', [AccessTokensController::class, 'store'])->middleware('guest:sanctum');
-Route::delete('auth/access-tokens/{token?}', [AccessTokensController::class, 'destroy'])->middleware('auth:sanctum'); // {token?} => optional parameter
+        Route::post('auth/access-tokens', [AccessTokensController::class, 'store'])->middleware('guest:sanctum');
+
+        Route::delete('auth/access-tokens/{token?}', [AccessTokensController::class, 'destroy'])->middleware('auth:sanctum'); // {token?} => optional parameter
+    });

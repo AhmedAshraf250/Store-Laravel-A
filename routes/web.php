@@ -49,51 +49,36 @@ Route::group([
     Route::post('/currency', [CurrencyConverterController::class, 'store'])->name('currency.store');
 });
 
+require __DIR__ . '/dashboard.php';
 
+
+// For Test  ---------------- for me
 Route::get('/cache', [TestController::class, 'cache']);
-
-// For Test  ----------------
+Route::get('/cache2', [TestController::class, 'cache2']);
 Route::post('/paypal/webhook', function () {
     echo 'webhook Called';
 });
-// For Test  ----------------
+// For Test  ---------------- for me
 
-// From Laravel Breeze:------------------------
+// From Laravel Breeze------------------------From Laravel Breeze //
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
-// require __DIR__ . '/auth.php';
-// From Laravel Breeze:------------------------
+require __DIR__ . '/admin_auth.php';
+// From Laravel Breeze------------------------From Laravel Breeze //
 
-require __DIR__ . '/dashboard.php';
 
 // Route::fallback(function () {
 //     return redirect('/' . config('app.locale'));
 // });
 
 
-
 // For Testing [Development]
 // =======================================================================================================
-Route::get('/route-viewer', function () {
-    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes())->map(function ($route) {
-        return [
-            'method' => implode('|', $route->methods()),
-            'uri' => $route->uri(),
-            'name' => $route->getName(),
-            'action' => $route->getActionName(),
-            'middleware' => implode(', ', $route->middleware()),
-        ];
-    });
 
-    return view('route-viewer', compact('routes'));
-});
-// =======================================================================================================
-// =======================================================================================================
-
-Route::get('/routes-viewer', function () {
+Route::get('routes-viewer', function () {
     $routes = collect(Route::getRoutes());
     return view('routes', compact('routes'));
 });

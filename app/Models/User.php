@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Concerns\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +47,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // User ==[calls]-[morphToMany]==> 'role_user' table ==[return|retrieve]==> Role
+    // public function roles()
+    // {
+    //     // {role_user} >>>> ['authorizable_type','authorizable_id','role_id']
+    //     return $this->morphToMany(Role::class, 'authorizable', 'role_user', 'authorizable_id', 'role_id', 'id', 'id');
+    // }
+
 
     public function profile()
     {

@@ -27,10 +27,14 @@ class CurrencyConverterController extends Controller
             return Redirect::back();
         }
 
-        $cacheKey = 'currency_rate_' . $currencyCode;
-        $rate = Cache::get($cacheKey, 0);
         try {
+            $cacheKey = 'currency_rate_' . $currencyCode;
+            $rate = Cache::get($cacheKey, 0);
             if (!$rate) {
+                $keys = Cache::get('debug_cache_keys', []);
+                $keys[] = $cacheKey;
+                Cache::put('debug_cache_keys', $keys);
+
                 $converter = app('currency.converter'); // app()->make('currency.converter'); OR App::make('currency.converter');
                 $rate = $converter->live($currencyCode, $baseCurrency);
                 Cache::put($cacheKey, $rate, now()->addMinutes(60));

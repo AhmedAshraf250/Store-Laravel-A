@@ -19,12 +19,26 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, ...$guards)
     {
-        if (Auth::guard('admin')->check()) {
-            return redirect('/admin/dashboard');
+
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                // هنا نحدد الوجهة حسب الـ guard
+                $redirectTo = match ($guard) {
+                    'admin'    => 'dashboard.dashboard',
+                    'web'      => 'home',                          // or route('home')
+
+                    'seller'   => '/seller/dashboard',
+                    'customer' => '/customer/profile',
+                    default    => RouteServiceProvider::HOME,
+                };
+
+                return redirect()->route($redirectTo);
+            }
         }
-        if (Auth::guard('web')->check()) {
-            return redirect('/');
-        }
+
+        return $next($request);
 
         // $guards = empty($guards) ? [null] : $guards;
         // foreach ($guards as $guard) {
@@ -33,6 +47,6 @@ class RedirectIfAuthenticated
         //     }
         // }
 
-        return $next($request);
+        // return $next($request);
     }
 }

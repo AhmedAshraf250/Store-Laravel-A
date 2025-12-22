@@ -35,28 +35,28 @@ class FortifyServiceProvider extends ServiceProvider
         * - Support multiple guards without extra code
         */
 
-        $request = request();
+        // $request = request();
 
         /*
         * If the incoming request starts with "admin/",
         * we switch Fortify to use the admin guard.
         * Otherwise, the default "web" guard is used.
         */
-        if ($request->is('admin/*')) {
-            Config::set('fortify.guard', 'admin');
-            Config::set('fortify.passwords', 'admins');
+        // if ($request->is('admin/*')) {
+        //     Config::set('fortify.guard', 'admin');
+        //     Config::set('fortify.passwords', 'admins');
 
-            /*
+        /*
             * IMPORTANT:
             * This ensures that all Fortify routes are automatically
             * This prefix is added to ALL Fortify routes
             * (login, logout, password reset, etc.)
             */
-            Config::set('fortify.prefix', 'admin');
+        // Config::set('fortify.prefix', 'admin');
 
-            // Redirect path after successful authentication
-            // Config::set('fortify.home', 'admin/dashboard');
-        }
+        // Redirect path after successful authentication
+        // Config::set('fortify.home', 'admin/dashboard');
+        // }
 
         /*
         |--------------------------------------------------------------------------
@@ -77,16 +77,16 @@ class FortifyServiceProvider extends ServiceProvider
             new class implements LoginResponse {
                 public function toResponse($request)
                 {
-                    if ($request->user('admin')) {
-                        /*
-                        * intended():
-                        * - Redirects the user back to the originally requested page
-                        *   before authentication, if it exists.
-                        * - Falls back to the admin dashboard if no intended URL
-                        *   is stored in the session.
-                        */
-                        return redirect()->intended('admin/dashboard');
-                    }
+                    // if ($request->user('admin')) {
+                    //     /*
+                    //     * intended():
+                    //     * - Redirects the user back to the originally requested page
+                    //     *   before authentication, if it exists.
+                    //     * - Falls back to the admin dashboard if no intended URL
+                    //     *   is stored in the session.
+                    //     */
+                    //     return redirect()->intended('admin/dashboard');
+                    // }
 
                     // Default behavior for non-admin users
                     return redirect()->intended('/');
@@ -162,11 +162,12 @@ class FortifyServiceProvider extends ServiceProvider
          * Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
          *      - By placing this inside the boot method, Fortify will use this authentication logic for ALL guards (web, admin, or any other guard).
          */
-        if (Config::get('fortify.guard') == 'admin') {
-            Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
-            Fortify::viewPrefix('auth.');
-        } else {
-            Fortify::viewPrefix('front.auth.');
-        }
+        // if (Config::get('fortify.guard') == 'admin') {
+        //     Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
+        //     Fortify::viewPrefix('auth.');
+        // } else {
+        //     Fortify::viewPrefix('front.auth.');
+        // }
+        Fortify::viewPrefix('front.auth.');
     }
 }

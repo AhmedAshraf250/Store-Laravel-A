@@ -8,9 +8,15 @@
 @endsection
 
 @section('content')
-    <a href="{{ route('dashboard.categories.create') }}" class=" mb-5 btn btn-group-lg btn-outline-primary">
-        Create Category
-    </a>
+    {{-- if (User::find(1)->can('category.crate'))  >> we can check permission of some user if he not the current authenticated user --}}
+    {{-- check if the current authenticated user can create category or has permission --}}
+    @if (Auth::user()->can('categories.create'))
+        {{-- OR ==>> @can('categories.create') --}}
+        <a href="{{ route('dashboard.categories.create') }}" class=" mb-5 btn btn-group-lg btn-outline-primary">
+            Create Category
+        </a>
+    @endif
+
     <a href="{{ route('dashboard.categories.trash') }}" class=" mb-5 btn btn-group-lg btn-outline-info">
         Trash
     </a>
@@ -105,16 +111,20 @@
                     <td>{{ $category->status }}</td>
                     <td>{{ $category->created_at }}</td>
                     <td>
-                        <a href="{{ route('dashboard.categories.edit', $category->id) }}"
-                            class="btn btn-sm btn-outline-success">Edit</a>
+                        @can('categories.update')
+                            <a href="{{ route('dashboard.categories.edit', $category->id) }}"
+                                class="btn btn-sm btn-outline-success">Edit</a>
+                        @endcan
                     </td>
                     <td>
-                        <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
-                            @csrf
-                            {{-- <input type="hidden" name="_method" value="delete"> --}}
-                            @method('delete')
-                            <input type="submit" class="btn btn-sm btn-outline-danger" value="Delete">
-                        </form>
+                        @can('categories.delete')
+                            <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
+                                @csrf
+                                {{-- <input type="hidden" name="_method" value="delete"> --}}
+                                @method('delete')
+                                <input type="submit" class="btn btn-sm btn-outline-danger" value="Delete">
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @empty

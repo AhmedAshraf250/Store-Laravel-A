@@ -144,7 +144,18 @@
  *     > php artisan make:middleware SetAppLocale
  *     > composer require mcamara/laravel-localization
  *     > php artisan vendor:publish --provider="Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider"
- *
+ * ***
+ * 
+ *  # Commit [14]: implement roles & permissions using Gates and Policies
+ *     > php artisan make:model Role -m
+ *     > php artisan make:model RoleAbility -m
+ *     > php artisan make:migration create_role_user_table
+ *     > php artisan make:controller Dashboard\RolesController -r
+ *     > php artisan make:controller Dashboard\AdminsController -r
+ *     > php artisan make:controller Dashboard\UsersController -r
+ *     > php artisan make:policy RolePolicy --model=Role      // Default name is [ModelPolicy] | Directory: "app\Policies\RolePolicy.php"
+ *     > php artisan make:policy ProductPolicy --model=Product
+ *     > php artisan make:policy ModelPolicy
  */
 
 use Illuminate\Support\Facades\Auth;

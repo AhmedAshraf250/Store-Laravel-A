@@ -18,6 +18,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
+
+        $this->authorize('viewAny', Product::class); // OR $this->authorize('view-any', Product::class);
+
         // in Case if I want to stop global scope of this model => withoutGlobalScope('scopeName') LIKE: 
         // $products = Product::withoutGlobalScope('store')->paginate();
 
@@ -34,7 +37,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Product::class);
     }
 
     /**
@@ -45,7 +48,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create', Product::class);
     }
 
     /**
@@ -54,7 +57,15 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {}
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $this->authorize('view', $product);
+
+        $tags = implode(',', $product->tags()->pluck('name')->toArray());
+        // return view('dashboard.products.show', compact('product', 'tags'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -65,6 +76,9 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
+
+        $this->authorize('update', $product);
+
         $tags = implode(',', $product->tags()->pluck('name')->toArray());
         return view('dashboard.products.edit', compact('product', 'tags'));
     }
@@ -78,6 +92,8 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         //  TODO: Validate
 
         $product->update($request->except('tags'));
