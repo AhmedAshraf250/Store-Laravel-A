@@ -17,6 +17,18 @@ $app = new Illuminate\Foundation\Application(
 
 /*
 |--------------------------------------------------------------------------
+| Override public path (VERY EARLY)
+|--------------------------------------------------------------------------
+*/
+$app->singleton('path.public', fn() => base_path('../public_html'));
+// $app->singleton('path.public', function () use ($app) {
+//     return $app->environment('production')
+//         ? base_path('../public_html')
+//         : base_path('public');
+// });
+
+/*
+|--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------
 |

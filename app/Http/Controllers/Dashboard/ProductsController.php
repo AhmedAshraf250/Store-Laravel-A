@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ImportProducts;
 use App\Models\Product;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -157,6 +158,14 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $this->authorize('delete', $product);
+        $product->delete();
+        return redirect()->route('dashboard.products.index')->with('success', 'Product deleted');
     }
+
+    // public function import()
+    // {
+    //     ImportProducts::dispatch();
+    // }
 }

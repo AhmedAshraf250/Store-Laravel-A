@@ -15,6 +15,12 @@
         </a>
     @endcan
 
+    @can('create', App\Models\Product::class)
+        <a href="{{ route('dashboard.products.import') }}" class=" mb-5 btn btn-group-lg btn-outline-info">
+            Import Product
+        </a>
+    @endcan
+
     <x-alert type="success" />
     <x-alert type="info" />
 

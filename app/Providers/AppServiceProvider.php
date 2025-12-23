@@ -31,6 +31,15 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('local')) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
         }
+
+
+        /** ❌ Do not define behavior or environment-dependent logic here; this can cause unexpected runtime issues */
+        // if (App::environment('production')) {
+        //     $this->app->singleton('path.public', function () {
+        //         return base_path('../public_html');
+        //         // return base_path('public_html');
+        //     });
+        // }
     }
 
     /**

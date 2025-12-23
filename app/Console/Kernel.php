@@ -2,11 +2,24 @@
 
 namespace App\Console;
 
+use App\Jobs\DeleteExpireOrders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+        /*
+            > php artisan orders:delete-expired
+                ↓
+            artisan (file)
+                ↓
+            Console Kernel (App\Console\Kernel)
+                ↓
+            Command class
+                ↓
+            handle()
+        */
+
     /**
      * Define the application's command schedule.
      *
@@ -15,7 +28,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // > php artisan schedule:work 
+
         // $schedule->command('inspire')->hourly();
+        $schedule->job(new DeleteExpireOrders)->everyMinute();
+        $schedule->command('orders:delete-expired')->daily(); //->withoutOverlapping()->runInBackground();
     }
 
     /**
@@ -25,7 +42,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

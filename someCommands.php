@@ -120,7 +120,7 @@
  *     > php artisan make:component Dashboard\NotificationsMenu
  *     > php artisan make:middleware MarkNotificationAsRead
  *     > php artisan queue:table                                                         // [Migration: 'create_jobs_table']
- *     > php artisan queue:work
+ *     > php artisan queue:work --queue=default,high,...
  *     > npm install --save laravel-echo pusher-js
  * ***
  *
@@ -146,7 +146,7 @@
  *     > php artisan vendor:publish --provider="Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider"
  * ***
  * 
- *  # Commit [14]: implement roles & permissions using Gates and Policies
+ *  # Commit [14]: feat(authorization): implement role-based permissions with MorphToMany polymorphic relations, Gates & Policies + distribute guards between Breeze (admin) and Fortify (web)
  *     > php artisan make:model Role -m
  *     > php artisan make:model RoleAbility -m
  *     > php artisan make:migration create_role_user_table
@@ -156,6 +156,20 @@
  *     > php artisan make:policy RolePolicy --model=Role      // Default name is [ModelPolicy] | Directory: "app\Policies\RolePolicy.php"
  *     > php artisan make:policy ProductPolicy --model=Product
  *     > php artisan make:policy ModelPolicy
+ * ***
+ * 
+ *  # Commit [15]: implement queue|jobs, commands, custom exceptions.
+ *     > php artisan make:exception InvalidOrderException
+ *     > php artisan make:job DeleteExpireOrders
+ *              > php artisan schedule:run  || > php artisan schedule:work ...
+ *     > php artisan make:command DeleteExpireOrders // look in 'app\Console\Commands\DeleteExpireOrders.php'
+ *              > php artisan orders:delete-expire --days=30 |/|\| [No expired pending orders found.] OR [✅ Deleted 70 expired pending orders.]
+ *      > php artisan make:job ImportProducts
+ *      > php artisan queue:work --queue=import,default --tries=3 --timeout=300
+ *      
+ *          [on server may be needed]:
+ *      > composer install --optimize-autoload --no-dev | php artisan optimize (caching) | symlink(__DIR__.'/../AhmedIKA/storage/app/public', __DIR__.'/storage')
+ * 
  */
 
 use Illuminate\Support\Facades\Auth;

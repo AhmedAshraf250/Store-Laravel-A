@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,11 +19,23 @@ class UsersSeeder extends Seeder
     public function run()
     {
         // > php artisan db:seed --class=UserTableSeeder
-        
+
         // \App\Models\Product::factory(10)->create();
-        User::create([
+
+        Admin::create([
             'name' => 'Ahmed Ashraf',
             'email' => 'ahmed@mail.com',
+            'username' => 'ahmedashraf',
+            'password' => Hash::make('12345678'),
+            'phone_number' => '201060701145',
+            'super_admin' => true,
+            'status' => 'active'
+            // 'created_at' and 'updated_at' => automatically recorded with eloquent model methods
+        ]);
+
+        User::create([
+            'name' => 'Ahmed Ashraf',
+            'email' => 'ahmedu@mail.com',
             'password' => Hash::make('12345678'),
             'phone_number' => '201060701145'
             // 'created_at' and 'updated_at' => automatically recorded with eloquent model methods

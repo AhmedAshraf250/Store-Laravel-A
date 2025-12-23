@@ -13,6 +13,45 @@ use Illuminate\Support\Collection;
 
 class OrderCreated
 {
+
+    /*
+
+                [ User Action / System Trigger ]
+                        |
+                        v
+                    Event Fired
+                (OrderCreatedEvent)
+                        |
+                        v
+                Listener Catches Event
+                (SendOrderNotification)
+                        |
+                        v
+                Notification Instantiated
+            (OrderCreatedNotification($order))
+                        |
+                        v
+                    Queueable Used?
+                        |
+        +---------------+---------------+
+        |                               |
+        v                               v
+    sync Queue                      database/redis
+    (execute immediately)     (insert Job into jobs table)
+        |                               |
+        |                               |
+        v                               v
+    toMail(), toDatabase(),         toBroadcast() 
+    (executed inline)           (executed by worker)
+        |                               |
+        +---------------+---------------+
+                        v
+                Notification Sent
+
+    */
+
+
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $orders;

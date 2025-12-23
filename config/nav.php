@@ -9,7 +9,7 @@ return [
         'active' => 'dashboard.dashboard'
     ],
     [
-        'icon' => 'nav-icon fas fa-th',
+        'icon' => 'nav-icon fas fa-tags',
         'route' => 'dashboard.categories.index',
         'title' => 'Categories',
         'badge' => 'new',
@@ -17,21 +17,21 @@ return [
         'ability' => 'categories.view' // to show this nav item only for users who have this ability
     ],
     [
-        'icon' => 'nav-icon fas fa-edit',
+        'icon' => 'nav-icon fas fa-store',
         'route' => 'dashboard.categories.index',
         'title' => 'Stores',
         'active' => 'dashboard.stores.*',
         'ability' => 'stores.view'
     ],
     [
-        'icon' => 'nav-icon fas fa-columns',
+        'icon' => 'nav-icon fas fa-shopping-bag',
         'route' => 'dashboard.products.index',
         'title' => 'Products',
         'active' => 'dashboard.products.*',
         'ability' => 'products.view',
     ],
     [
-        'icon' => 'nav-icon fas fa-columns',
+        'icon' => 'nav-icon fas fa-box',
         'route' => 'dashboard.categories.index',
         'title' => 'Orders',
         'active' => 'dashboard.orders.*',

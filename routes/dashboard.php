@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\AdminsController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ImportProductsController;
 use App\Http\Controllers\Dashboard\ProductsController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
@@ -38,6 +39,8 @@ Route::group([
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update'); // ['patch'=> with or when no parameter exist in the Route ,'put'=> when parameter is exist]
 
+    Route::get('products/import', [ImportProductsController::class, 'index'])->name('products.import');
+    Route::post('products/import', [ImportProductsController::class, 'store']);
 
     // Route::resource('/products', ProductsController::class);
     // Route::resource('/categories', CategoriesController::class);
