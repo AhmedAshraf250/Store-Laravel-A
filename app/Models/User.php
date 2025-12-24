@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Concerns\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -23,7 +25,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone_number',
         'password',
+        'type',
+        'provider',
+        'provider_id',
+        'provider_token',
     ];
 
     /**
@@ -37,6 +44,7 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
+        'provider_token',
     ];
 
     /**
@@ -46,7 +54,34 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // 'provider_token' => 'encrypted',
     ];
+
+    // ------
+    // public function setProviderTokenAttribute($value)
+    // {
+    //     // $this->attributes['provider_token'] = encrypt($value);
+    //     $this->attributes['provider_token'] = Crypt::encrypt($value);
+    // }
+    // ------
+    // public function getProviderTokenAttribute($value)
+    // {
+    //     // return decrypt($value);
+    //     return Crypt::decrypt($value);
+    // }
+
+    // protected function provider_token(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => Crypt::decrypt($value),
+    //         set: fn($value) => Crypt::encrypt($value),
+    //     );
+    // }
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
+
 
     // User ==[calls]-[morphToMany]==> 'role_user' table ==[return|retrieve]==> Role
     // public function roles()

@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -49,6 +51,19 @@ Route::group([
     Route::post('/currency', [CurrencyConverterController::class, 'store'])->name('currency.store');
 });
 
+Route::get('auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])->name('auth.socialite.redirect');
+Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'])->name('auth.socialite.callback');
+Route::get('auth/{provider}/user', [SocialController::class, 'show']); // for Test
+
+// From Laravel Breeze------------------------From Laravel Breeze //
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+require __DIR__ . '/admin_auth.php';
+// From Laravel Breeze------------------------From Laravel Breeze //
+
 require __DIR__ . '/dashboard.php';
 
 
@@ -59,15 +74,6 @@ Route::post('/paypal/webhook', function () {
     echo 'webhook Called';
 });
 // For Test  ---------------- for me
-
-// From Laravel Breeze------------------------From Laravel Breeze //
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-require __DIR__ . '/admin_auth.php';
-// From Laravel Breeze------------------------From Laravel Breeze //
 
 
 // Route::fallback(function () {

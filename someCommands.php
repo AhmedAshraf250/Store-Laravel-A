@@ -169,7 +169,14 @@
  *      
  *          [on server may be needed]:
  *      > composer install --optimize-autoload --no-dev | php artisan optimize (caching) | symlink(__DIR__.'/../AhmedIKA/storage/app/public', __DIR__.'/storage')
+ *  ***
  * 
+ *  # Commit [16]: feat(auth): initial social login implementation using Laravel Socialite
+ *      > composer require laravel/socialite
+ *      > php artisan make:controller Auth\SocialLoginController
+ *      > php artisan make:migration add_social_providers_columns_to_users_table  // [[Deprecated]]
+ *      > php artisan make:migration create_social_accounts_table
+ *      > php artisan make:model SocialAccount
  */
 
 use Illuminate\Support\Facades\Auth;
