@@ -5,9 +5,11 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\PaymentsController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialController;
+use App\Http\Controllers\StripeWebhooksController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -45,6 +47,12 @@ Route::group([
 
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store']);
+
+    Route::get('checkout/{order}/payment', [PaymentsController::class, 'showPaymentForm'])->name('checkout.payment.create');
+    Route::post('checkout/{order}/stripe/payment-intent', [PaymentsController::class, 'createStripePaymentIntent'])
+        ->name('stripe.paymentIntent.create');
+    Route::get('checkout/{order}/payment/stripe/callback', [PaymentsController::class, 'confirm'])->name('stripe.return');
+    Route::any('stripe/webhook', StripeWebhooksController::class); // except in 'app/Http/Middleware/VerifyCsrfToken.php'
 
     Route::view('/auth/user/2fa', 'front.auth.two-factor-auth')->name('front.2fa')->middleware('auth');
 

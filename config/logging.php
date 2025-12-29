@@ -60,6 +60,22 @@ return [
             'path' => storage_path('logs/sql.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+        'stripe' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/stripe.log'),
+            'level' => 'info',
+            'days' => 14,
+        ],
+        'stripe_debug' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/stripe_debug.log'),
+            'level' => 'debug',
+        ],
+        'critical' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'critical',
+        ],
         //----------------------
         'single' => [
             'driver' => 'single',

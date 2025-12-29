@@ -50,6 +50,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             \App\Http\Middleware\CheckApiToken::class, // added by me
+            \App\Http\Middleware\DisableDebugbarForApi::class, // added by me
         ],
     ];
 

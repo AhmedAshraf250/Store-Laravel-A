@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\Intl\Countries;
 use Throwable;
 
@@ -108,6 +109,7 @@ class CheckoutController extends Controller
                     'store_id' => $store_id,
                     'user_id' => Auth::id(),
                     'payment_method' => 'cod',
+                    'total' => $cart->total(),
                 ]);
 
                 foreach ($cart_items as $item) {
@@ -172,7 +174,10 @@ class CheckoutController extends Controller
             DB::rollBack();
             throw $e;
         }
-        return redirect()->route('cart.index')->with('success', 'Order placed successfully');
-        // return redirect()->route('orders.payments.create', $order->id);
+
+        Session::put('guest_order_id', $order->id);
+
+        // return redirect()->route('cart.index')->with('success', 'Order placed successfully');
+        return redirect()->route('checkout.payment.create', $order->id);
     }
 }

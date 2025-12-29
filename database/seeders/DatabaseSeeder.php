@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         // > php artisan db:seed
 
-        \App\Models\Admin::factory(3)->create();
+        // \App\Models\Admin::factory(3)->create();
 
         // \App\Models\User::factory(10)->create();
         // \App\Models\Product::factory(10)->create();

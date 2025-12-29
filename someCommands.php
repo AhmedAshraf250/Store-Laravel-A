@@ -177,6 +177,13 @@
  *      > php artisan make:migration add_social_providers_columns_to_users_table  // [[Deprecated]]
  *      > php artisan make:migration create_social_accounts_table
  *      > php artisan make:model SocialAccount
+ *  ***
+ * 
+ *  # Commit [17]: feat(payments): add Stripe payment gateway with webhooks support (initial implementation)
+ *      > composer require stripe/stripe-php
+ *      > php artisan make:controller Fornt\PaymentsController
+ *      > php artisan make:model Payment -m
+ *      > php artisan make:job HandleStripeEvent
  */
 
 use Illuminate\Support\Facades\Auth;

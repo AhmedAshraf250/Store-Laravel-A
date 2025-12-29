@@ -19,6 +19,11 @@ class Order extends Model
         'payment_status'
     ];
 
+    public function isPaid(): bool
+    {
+        return $this->status === 'paid';
+    }
+
     // Relations
 
     public function store()
@@ -138,5 +143,13 @@ class Order extends Model
             return $number + 1;
         }
         return $year . '0000001';
+    }
+
+    public function total()
+    {
+        $this->loadMissing('items.product');
+        return $this->items->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
     }
 }

@@ -8,8 +8,9 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production",
-        "mailpit": ".\\tools\\mailpit.exe",
-        "mailpit:open": "start http://127.0.0.1:8025 && .\\tools\\mailpit.exe"
+        "mailpit:lin": "./tools/mailpit",
+        "mailpit:win": ".\\tools\\mailpit.exe",
+        "mailpit:w -open": "start http://127.0.0.1:8025 && .\\tools\\mailpit.exe"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

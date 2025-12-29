@@ -70,6 +70,9 @@ class SendOrderCreatedNotification
             // $user = User::where('store_id', $order->store_id)->first();
             // $user->notify(new OrderCreatedNotification($order));
             $users = User::where('store_id', $order->store_id)->get();
+            if ($users->isEmpty()) {
+                continue;
+            }
             Notification::send($users, new OrderCreatedNotification($order));
         }
     }
