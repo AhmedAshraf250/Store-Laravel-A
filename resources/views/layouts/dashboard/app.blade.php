@@ -249,7 +249,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.min.js') }}"></script>
     <script>
-        const userID = {{ Auth::id() }};
+        const userID = {{ Auth::guard('admin')->id() }};
     </script>
 
     <script src="{{ asset('js/app.js') }}"></script>

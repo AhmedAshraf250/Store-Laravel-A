@@ -236,4 +236,9 @@ class OrderCreatedNotification extends Notification
             //
         ];
     }
+
+    public function broadcastOn()
+    {
+        // return new PrivateChannel('App.Models.User.' . $this->order->user_id);
+    }
 }

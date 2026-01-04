@@ -5,6 +5,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\OrdersController;
 use App\Http\Controllers\Front\PaymentsController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -44,6 +45,8 @@ Route::group([
     Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show'); // {product:slug} 'slug' will be the default for [model binding] in this route instead of 'id'
 
     Route::resource('/cart', CartController::class);
+
+    Route::get('/orders/{order}', [OrdersController::class, 'show'])->name('orders.show');
 
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store']);

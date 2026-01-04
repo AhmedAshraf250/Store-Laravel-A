@@ -14,11 +14,16 @@ Alpine.start();
 // هذا السطر يقوم بالاشتراك في قناة خاصة وآمنة (private channel) عبر Pusher/Echo.
 // **الوظيفة:** يفتح اتصالاً بالخادم لجعل هذا المستخدم مستعداً لاستقبال أي إشعارات أو رسائل (events)
 
-var channel = window.Echo.private(`App.Models.User.${userID}`);
+var channel1 = window.Echo.private(`App.Models.Admin.${userID}`);
+var channel2 = window.Echo.channel(`deliveries`);
 
-channel.notification(function (data) {
+channel1.notification(function (data) {
     console.log(data);
     alert(data.body);
+});
+
+channel2.listen(".delivery.location.updated", function (data) {
+    alert(JSON.stringify(data));
 });
 
 // var channel = window.Echo.channel("Define the channel name you want Echo to listen to");

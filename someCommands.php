@@ -184,6 +184,13 @@
  *      > php artisan make:controller Fornt\PaymentsController
  *      > php artisan make:model Payment -m
  *      > php artisan make:job HandleStripeEvent
+ *  ***
+ * 
+ *  # Commit [18]:
+ *      > php artisan make:model Delivery -m
+ *      > php artisan make:migration add_pending_status_to_deliveries_table
+ *      > php artisan make:controller Api\DeliveriesController
+ *      > php artisan make:event DeliveryLocationUpdated
  */
 
 use Illuminate\Support\Facades\Auth;

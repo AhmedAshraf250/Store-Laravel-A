@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -95,7 +96,7 @@ use Illuminate\Support\Facades\Broadcast;
 |--------------------------------------------------------------------------
 | Summary
 |--------------------------------------------------------------------------
-| - Event defines WHERE to broadcast
+| - Event/Notification defines WHERE to broadcast
 | - channels.php defines WHO can listen
 | - Echo listens and handles the event in real-time
 |
@@ -121,4 +122,8 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     // 'private-' -> this is a prefix means that is a private channel 
     // 'App.Models.User.1' -> but this is the already defined channel name || the user who id is 1 can listen to this channel
 
+});
+
+Broadcast::channel('deliveries.{order_id}', function ($user, $order_id) {
+    return (int) $user->id === (int) Order::findOrFail($order_id)->user_id;
 });

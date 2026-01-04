@@ -124,6 +124,11 @@ class Order extends Model
         return $this->hasOne(OrderAdress::class)->where('type', 'shipping');
     }
     // ====***====
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class);
+    }
+    // ====***====
 
     protected static function booted()
     {

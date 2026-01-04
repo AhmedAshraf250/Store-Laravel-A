@@ -9,12 +9,37 @@ use App\Models\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class DeductProductQuantity
 {
+
     /**
-     * Create the event listener.
+     * --- QUEUE WORKER LIFECYCLE ---
+     * [1] TRIGGER  : Event Fired -> Listener pushed to Queue (Serialized)
+     * [2] PICKUP   : Worker picks Job -> Looks for properties ($tries, $delay)
+     * [3] EXECUTE  : Worker calls handle()
+     * [4] SUCCESS  : Job deleted from Queue
+     * [5] FAIL     : If Exception occurs -> Worker checks ($tries)
+     * |__ Still has attempts? -> Back to Queue (Retry)
+     * |__ No more attempts?   -> Call failed() -> Move to 'failed_jobs' table
+     * ------------------------------
+     */
+    /**
+     * --- THE HIDDEN ENGINE ---
+     * [1] Serialization   : Convert Listener Object -> JSON String (To Storage)
+     * [2] Deserialization : Worker reads JSON -> Recreates Listener Object
+     * [3] Reflection      : Worker "Inspects" the Object for $tries, $delay, etc.
+     * [4] Execution       : Worker calls handle()
+     */
+    // public $connection = 'database'; //
+    // public $queue = 'low_priority'; // determine which queue the job should be sent to ||| [> php artisan queue:work --queue=low_priority]
+    // public $delay = 60; //
+    // public $tries = 3;
+
+    /**
+     * Create the event listener.s
      *
      * @return void
      */
@@ -67,6 +92,17 @@ class DeductProductQuantity
             }
         } catch (Throwable $e) {
         }
+
+        // // Only for example => like if the order is free, do not complete the rest of the listeners (such as the payment license).
+        // if ($event->order->total == 0) {
+        //     return false; // return false to skip\stop the rest of the listeners
+        // }
+    }
+
+    public function failed(OrderCreated $event, $exception)
+    {
+        // هنا نرسل تنبيه للمبرمج أو نسجل الخطأ في قاعدة البيانات
+        Log::error("فشل إرسال فاتورة الطلب رقم: " . $event->orders->id);
     }
 }
 
