@@ -59,7 +59,9 @@
                             onerror="this.src='{{ asset('storage/uploads/product.png') }}'; this.onerror=null;">
                     </td>
                     <td>{{ $product->id }}</td>
-                    <td>{{ $product->name }}</td>
+                    <td><a href="{{ route('dashboard.products.show', $product->id) }}"> {{ $product->name }}</a>
+                    </td>
+
                     <td>
                         {{ $product->category()->first()->name ?? 'Category Not Found' }}
                     </td>

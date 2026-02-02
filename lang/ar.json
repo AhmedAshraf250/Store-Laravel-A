@@ -21,5 +21,49 @@
     "Tax": "الضريبة",
     "Shipping": "الشحن",
 
+    "categories.view": "عرض الفئات",
+    "categories.create": "إنشاء فئة",
+    "categories.update": "تحديث فئة",
+    "categories.delete": "حذف فئة",
+
+    "products.view": "عرض المنتجات",
+    "products.create": "إنشاء منتج",
+    "products.update": "تحديث منتج",
+    "products.delete": "حذف منتج",
+    "products.restore": "استعادة منتج",
+    "products.force-delete": "حذف نهائي منتج",
+
+    "orders.view": "",
+    "orders.create": "",
+    "orders.update": "",
+    "orders.delete": "",
+
+    "users.view": "",
+    "users.create": "",
+    "users.update": "",
+    "users.delete": "",
+
+    "admins.view": "",
+    "admins.create": "",
+    "admins.update": "",
+    "admins.delete": "",
+
+    "roles.view": "",
+    "roles.create": "",
+    "roles.update": "",
+    "roles.delete": "",
+    "roles.restore": "",
+    "roles.force-delete": "",
+
+    "permissions.view": "",
+    "permissions.create": "",
+    "permissions.update": "",
+    "permissions.delete": "",
+
+    "stores.view": "",
+    "stores.create": "",
+    "stores.update": "",
+    "stores.delete": "",
+
     "--- IGNORE ---": " to get this word by : Lang::get('app.home') or __('app.home') or trans('app.home') "
 }

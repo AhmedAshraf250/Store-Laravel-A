@@ -6,6 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>{{ $title }}</title>
     <meta name="description" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.svg') }}" />
 
@@ -104,16 +105,18 @@
                             @auth('web')
                                 <div class="user-menu">
                                     <div class="user">
-                                        <i class="lni lni-user"></i>
-                                        <span>{{ auth('web')->user()->name }}</span>
-                                    </div>
+                                        <a href="{{ route('profile.edit') }}">
+                                            <i class="lni lni-user"></i>
+                                            <span>{{ auth('web')->user()->name }}</span>
+                                        </a>
 
+                                    </div>
                                     <ul class="user-login">
                                         <li>
                                             <a href="#" class="logout-link"
                                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 <i class="lni lni-exit"></i>
-                                                Logout
+                                                {{ __('Logout') }}
                                             </a>
                                         </li>
                                     </ul>
@@ -152,7 +155,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3 col-md-3 col-7">
                         <!-- Start Header Logo -->
-                        <a class="navbar-brand" href="index.html">
+                        <a class="navbar-brand" href="{{ route('home') }}">
                             <img src="{{ asset('assets/images/logo/logo.svg') }}" alt="Logo">
                         </a>
                         <!-- End Header Logo -->
@@ -259,7 +262,8 @@
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ms-auto">
                                     <li class="nav-item">
-                                        <a class="active" href="index.html" aria-label="Toggle navigation">Home</a>
+                                        <a class="active" href="{{ route('home') }}"
+                                            aria-label="Toggle navigation">Home</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="dd-menu  collapsed" href="javascript:void(0)"
@@ -353,7 +357,7 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-12">
                             <div class="footer-logo">
-                                <a href="index.html">
+                                <a href="{{ route('home') }}">
                                     <img src="{{ asset('assets/images/logo/white-logo.svg') }}" alt="#">
                                 </a>
                             </div>

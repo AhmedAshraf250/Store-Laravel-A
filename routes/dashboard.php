@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => [
+        // 'admin',
         'auth:admin', // auth:{guard} Like: auth:admin,web
         // 'auth.type:super-admin,admin'
     ],

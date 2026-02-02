@@ -29,5 +29,23 @@ class DatabaseSeeder extends Seeder
         // Category::factory(10)->create();
         // Product::factory(100)->create();
         // $this->call(UsersSeeder::class);
+
+        $this->command->info('');
+        $this->command->info('Starting Database Seeding...');
+        $this->command->info('=====================================');
+        $this->command->info('');
+
+        // All-in-one seeder
+        // $this->call(SuperAdminSeeder::class);
+
+        $this->call([
+            RoleSeeder::class,
+            AbilitySeeder::class,
+            AdminSeeder::class,
+        ]);
+
+        $this->command->info('');
+        $this->command->info('Database seeding completed successfully!');
+        $this->command->info('');
     }
 }

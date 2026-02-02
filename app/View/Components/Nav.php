@@ -74,7 +74,7 @@ class Nav extends Component
     public function render()
     {
         // render() method is responsible for returning the view that associated with this component.
-        return view('components.nav');
+        return view('components.dashboard.nav');
     }
 
     protected function prepareItems($items)

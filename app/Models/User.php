@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Concerns\HasRoles;
+use App\Notifications\CustomVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Crypt;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
@@ -31,6 +33,8 @@ class User extends Authenticatable
         'provider',
         'provider_id',
         'provider_token',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -55,6 +59,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         // 'provider_token' => 'encrypted',
+        'otp_expires_at' => 'datetime',
+
     ];
 
     // ------
@@ -96,5 +102,57 @@ class User extends Authenticatable
         // withDefault() ensures that if this relation is requested and no result is found,it returns a default model instance instead of "null".
         // Note: withDefault is only used with "BelongsTo" and "HasOne" relationships.
         return $this->hasOne(Profile::class, 'user_id', 'id')->withDefault();
+    }
+
+
+    // ================================
+    //      For OTP Verification
+    // ================================
+    /**
+     * Send the email verification notification with OTP.
+     */
+    public function sendEmailVerificationNotification()
+    {
+        // توليد OTP code
+        $otpCode = $this->generateAndSaveOTP();
+
+        // إرسال الإيميل المخصص
+        $this->notify(new CustomVerifyEmail($otpCode));
+    }
+
+    /**
+     * Generate and save OTP code
+     */
+    public function generateAndSaveOTP()
+    {
+        $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        $this->update([
+            'otp_code' => $otpCode,
+            'otp_expires_at' => Carbon::now()->addMinutes(10),
+        ]);
+
+        return $otpCode;
+    }
+
+    /**
+     * Check if OTP is valid
+     */
+    public function isOtpValid($otp)
+    {
+        return $this->otp_code === $otp
+            && $this->otp_expires_at
+            && Carbon::now()->isBefore($this->otp_expires_at);
+    }
+
+    /**
+     * Clear OTP after verification
+     */
+    public function clearOtp()
+    {
+        $this->update([
+            'otp_code' => null,
+            'otp_expires_at' => null,
+        ]);
     }
 }

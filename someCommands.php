@@ -186,11 +186,14 @@
  *      > php artisan make:job HandleStripeEvent
  *  ***
  * 
- *  # Commit [18]:
+ *  # Commit [18]: feat(delivery): initial realtime map updates for delivery using Pusher broadcasting
  *      > php artisan make:model Delivery -m
  *      > php artisan make:migration add_pending_status_to_deliveries_table
  *      > php artisan make:controller Api\DeliveriesController
  *      > php artisan make:event DeliveryLocationUpdated
+ * 
+ *  # Commit [19]: feat(auth): refactor auth system - separate front controllers/views, add OTP + custom email verification, prepare 2FA, session isolation
+ * 
  */
 
 use Illuminate\Support\Facades\Auth;

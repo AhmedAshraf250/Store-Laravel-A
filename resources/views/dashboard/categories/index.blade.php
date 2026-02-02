@@ -147,7 +147,8 @@
 
     {{-- Default pagination Style --}}
     {{ $categories->withQueryString()->links() }} {{-- === --}} {{-- $categories->appends(request()->all())->links() --}}
-    {{ $categories->withQueryString()->links('pagination.custom') }} {{-- Custom Pagination (only here in this page or view file) --}}
+    {{-- {{ $categories->withQueryString()->links('pagination.custom') }}  --}}
+    {{-- Custom Pagination (only here in this page or view file) --}}
     {{-- 
         - If I ever need to create a custom pagination layout instead of Laravel’s default one,
             I can design it in a separate file and include it inside the "links" method.

@@ -9,12 +9,34 @@ class Profile extends Model
 {
     use HasFactory;
     protected $primaryKey = 'user_id';
-    protected $fillable = ['user_id', 'first_name', 'last_name', 'birthday', 'gender', 'street_address', 'city', 'state', 'postal_code', 'country', 'locale'];
+    protected $fillable = [
+        'user_id',
+        'first_name',
+        'last_name',
+        'birthday',
+        'gender',
+        'street_address',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'locale'
+    ];
+
+    protected $casts = [
+        'birthday' => 'date',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->withDefault();
     }
 
-
+    /**
+     * Get full name.
+     */
+    public function getFullNameAttribute(): string
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
 }
